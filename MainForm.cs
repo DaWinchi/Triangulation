@@ -19,10 +19,10 @@ namespace TriangleDeloneWithMagnetic
             InitializeComponent();
             parametrs = new Painter
             {
-                xmax = 20,
-                ymax = 20,
-                xmin = -20,
-                ymin = -20
+                xmax = 100,
+                ymax = 100,
+                xmin = -100,
+                ymin = -100
             };
 
 
@@ -32,6 +32,9 @@ namespace TriangleDeloneWithMagnetic
         Bitmap bmp;
         Graphics graph;
         List<PointF> points;
+        Triangulation triangulation = new Triangulation();
+        List<Triangle> list_triangles = new List<Triangle>();
+
         private void Painting()
         {
             int width=GraphicsBox.Width, height= GraphicsBox.Height;
@@ -45,22 +48,45 @@ namespace TriangleDeloneWithMagnetic
             graph.FillRectangle(brushBkgrd, 0, 0, width, height);
 
 
-            Pen dotPen = new Pen(Color.Red, 4);
+            Pen trianglePen = new Pen(Color.Yellow, 1);
 
-            foreach (PointF point in points)
+           
+
+            for (int i = 0; i < list_triangles.Count; i++)
             {
-                
-                graph.FillEllipse (brushPoint, (float)parametrs.X(width, point.X), (float)parametrs.Y(height, point.Y), 4, 4);
+                graph.DrawLine(trianglePen, (float)parametrs.X(width, list_triangles[i].point1.X), (float)parametrs.Y(height, list_triangles[i].point1.Y),
+                                            (float)parametrs.X(width, list_triangles[i].point2.X), (float)parametrs.Y(height, list_triangles[i].point2.Y));
+                graph.DrawLine(trianglePen, (float)parametrs.X(width, list_triangles[i].point2.X), (float)parametrs.Y(height, list_triangles[i].point2.Y),
+                                            (float)parametrs.X(width, list_triangles[i].point3.X), (float)parametrs.Y(height, list_triangles[i].point3.Y));
+                graph.DrawLine(trianglePen, (float)parametrs.X(width, list_triangles[i].point1.X), (float)parametrs.Y(height, list_triangles[i].point1.Y),
+                                            (float)parametrs.X(width, list_triangles[i].point3.X), (float)parametrs.Y(height, list_triangles[i].point3.Y));
+
             }
+
             GraphicsBox.Image = bmp;
         }
 
         private void DrawBtn_Click(object sender, EventArgs e)
         {
-            PointF point = new PointF(5, 6);
-            float angle = (float)(2 * Math.PI / 360 * 30);
-            Magnet magnet = new Magnet(10, 5, point,angle , (float)0.5); ;
-            points = magnet.ReturnRectangleDdiscret();
+            list_triangles.Clear();
+            PointF center1 = new PointF(0, -50);
+            float angle1 = (float)(2 * Math.PI / 360 * 0);
+            PointF center2 = new PointF(0, 50);
+            float angle2 = (float)(2 * Math.PI / 360 * 0);
+            PointF centerGlobal = new PointF(0, 0);
+
+            Magnet magnet1 = new Magnet(20, 20, center1,angle1, 5);
+            Magnet magnet2 = new Magnet(20, 20, center2, angle2,5);
+            Magnet GlobalRect = new Magnet(160, 160, centerGlobal, 0, 20);
+            PointF point1 = new PointF(200, 0); PointF point2 = new PointF(-200, 0);
+            PointF point3 = new PointF(0, 200); PointF point4 = new PointF(0, -200);
+
+            triangulation.AddGlobalPoints(point1, point2, point3, point4,
+                                           GlobalRect.ReturnRectangleDdiscret(),
+                                           magnet1.ReturnRectangleDdiscret(),
+                                           magnet2.ReturnRectangleDdiscret());
+            list_triangles.AddRange(triangulation.ReturnTriangles());
+
             Painting();
         }
     }
@@ -86,6 +112,8 @@ namespace TriangleDeloneWithMagnetic
 
         private void CreateDiscret()
         {
+            points.Clear();
+
             PointF A=new PointF(center.X-width/2, center.Y-height/2);
             PointF B=new PointF(center.X+width/2, center.Y-height/2);
             PointF C=new PointF(center.X+width/2, center.Y+height/2);

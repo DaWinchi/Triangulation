@@ -5,26 +5,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MainForm
+namespace TriangleDeloneWithMagnetic
 {
     struct Triangle { public PointF point1; public PointF point2; public PointF point3; }
     class Triangulation
     {
 
         public Triangulation()
-        { }
+        {
+            points = new List<PointF>();
+        }
 
-        List<PointF> points;
+        public List<PointF> points;
         List<Triangle> list_triangle;
         List<PointF> GlobalPoints;
         List<PointF> GlobalRectangle;
         List<PointF> Magnet1;
-        List<PointF> Magnet2
+        List<PointF> Magnet2;
         struct ParametrsEllipse { public double R; public PointF center; }
 
-        private void AddPoints(PointF p1, PointF p2, PointF p3, PointF p4,
+        public void AddGlobalPoints(PointF p1, PointF p2, PointF p3, PointF p4,
                      List<PointF> globRect,
-                     List <PointF> magnet1,
+                     List<PointF> magnet1,
                      List<PointF> magnet2)
         {
             GlobalPoints = new List<PointF> { p1, p2, p3, p4 };
@@ -32,6 +34,10 @@ namespace MainForm
             Magnet1 = new List<PointF>(); Magnet1.AddRange(magnet1);
             Magnet2 = new List<PointF>(); Magnet2.AddRange(magnet2);
 
+            points.AddRange(GlobalPoints);
+            points.AddRange(GlobalRectangle);
+            points.AddRange(Magnet1);
+            points.AddRange(Magnet2);
         }
 
         private ParametrsEllipse SearchEllipse(Triangle triangle)
@@ -55,11 +61,9 @@ namespace MainForm
             return param;
         }
 
-        private void SearchTriangle()
+        public List<Triangle> ReturnTriangles()
         {
-
             list_triangle = new List<Triangle>();
-            list_triangle.Clear();
             int count = points.Count();
             for (int i = 0; i < count - 2; i++)
             {
@@ -88,6 +92,27 @@ namespace MainForm
                     }
                 }
             }
+            return SortTriangle();
+        }
+
+        List<Triangle> SortTriangle()
+        {
+            List<Triangle> buftriangles = new List<Triangle>();
+            foreach (Triangle triangle in list_triangle)
+            {
+                bool isOk = true;
+                for (int i = 0; i < 4; i++)
+                {
+                    if ((triangle.point1 == GlobalPoints[i])
+                        || (triangle.point2 == GlobalPoints[i])
+                        || (triangle.point3 == GlobalPoints[i]))
+                    {
+                        isOk = false; break;
+                    }
+                }
+                if (isOk) buftriangles.Add(triangle);
+            }
+            return buftriangles;
         }
 
     }

@@ -20,5 +20,7 @@ namespace Parametrs
         {
             return -height / (ymax - ymin) * (y - ymax);
         }
+
+      
     }
 }
