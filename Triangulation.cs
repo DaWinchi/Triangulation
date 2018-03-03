@@ -19,6 +19,8 @@ namespace TriangleDeloneWithMagnetic
         public List<PointF> points;
         List<Triangle> list_triangle;
         List<PointF> GlobalPoints;
+        List<PointF> FakePoints;
+
         List<PointF> GlobalRectangle;
         List<PointF> Magnet1;
         List<PointF> Magnet2;
@@ -27,13 +29,16 @@ namespace TriangleDeloneWithMagnetic
         public void AddGlobalPoints(PointF p1, PointF p2, PointF p3, PointF p4,
                      List<PointF> globRect,
                      List<PointF> magnet1,
-                     List<PointF> magnet2)
+                     List<PointF> magnet2,
+                     List<PointF> fake)
         {
             GlobalPoints = new List<PointF> { p1, p2, p3, p4 };
             GlobalRectangle = new List<PointF>(); GlobalRectangle.AddRange(globRect);
             Magnet1 = new List<PointF>(); Magnet1.AddRange(magnet1);
             Magnet2 = new List<PointF>(); Magnet2.AddRange(magnet2);
+            FakePoints = new List<PointF>(); FakePoints.AddRange(fake);
 
+            points.AddRange(FakePoints);
             points.AddRange(GlobalPoints);
             points.AddRange(GlobalRectangle);
             points.AddRange(Magnet1);
@@ -85,7 +90,7 @@ namespace TriangleDeloneWithMagnetic
                             if ((n == i) || (n == j) || (n == k)) continue;
                             float distance = (float)Math.Sqrt((points[n].X - param.center.X) * (points[n].X - param.center.X) +
                                 (points[n].Y - param.center.Y) * (points[n].Y - param.center.Y));
-                            if (distance < param.R) { isOk = false; break; };
+                            if (((distance < param.R))||(distance>1e+6)||(param.R>1e+6)) { isOk = false; break; };
 
                         }
                         if (isOk) list_triangle.Add(triangle);
@@ -110,6 +115,17 @@ namespace TriangleDeloneWithMagnetic
                         isOk = false; break;
                     }
                 }
+
+                for (int i = 0; i < FakePoints.Count; i++)
+                {
+                    if ((triangle.point1 == FakePoints[i])
+                        || (triangle.point2 == FakePoints[i])
+                        || (triangle.point3 == FakePoints[i]))
+                    {
+                        isOk = false; break;
+                    }
+                }
+
                 if (isOk) buftriangles.Add(triangle);
             }
             return buftriangles;

@@ -70,21 +70,25 @@ namespace TriangleDeloneWithMagnetic
         {
             list_triangles.Clear();
             PointF center1 = new PointF(0, -50);
-            float angle1 = (float)(2 * Math.PI / 360 * 0);
+            float angle1 = (float)(2 * Math.PI / 360 * 45);
             PointF center2 = new PointF(0, 50);
             float angle2 = (float)(2 * Math.PI / 360 * 0);
             PointF centerGlobal = new PointF(0, 0);
 
-            Magnet magnet1 = new Magnet(20, 20, center1,angle1, 5);
-            Magnet magnet2 = new Magnet(20, 20, center2, angle2,5);
-            Magnet GlobalRect = new Magnet(160, 160, centerGlobal, 0, 20);
+            Magnet magnet1 = new Magnet(20, 20, center1,angle1, 10);
+            Magnet magnet2 = new Magnet(20, 20, center2, angle2,10);
+            Magnet GlobalRect = new Magnet(160, 160, centerGlobal, 0, 40);
+            List<PointF> fake = new List<PointF>();
+            fake.AddRange(magnet1.FakePoints());
+            fake.AddRange(magnet2.FakePoints());
             PointF point1 = new PointF(200, 0); PointF point2 = new PointF(-200, 0);
             PointF point3 = new PointF(0, 200); PointF point4 = new PointF(0, -200);
 
             triangulation.AddGlobalPoints(point1, point2, point3, point4,
                                            GlobalRect.ReturnRectangleDdiscret(),
                                            magnet1.ReturnRectangleDdiscret(),
-                                           magnet2.ReturnRectangleDdiscret());
+                                           magnet2.ReturnRectangleDdiscret(),
+                                           fake);
             list_triangles.AddRange(triangulation.ReturnTriangles());
 
             Painting();
@@ -141,6 +145,19 @@ namespace TriangleDeloneWithMagnetic
                 PointF bufPoint = new PointF(A.X, p);
                 points.Add(bufPoint);
             }
+        }
+
+        public List<PointF> FakePoints ()
+        {           
+
+            float step_x = width / 4, step_y = height / 4;
+
+            PointF point1 = new PointF(center.X - step_x, center.Y - step_y);
+            PointF point2 = new PointF(center.X + step_x, center.Y + step_y);
+            PointF point3 = new PointF(center.X, center.Y);
+
+            List<PointF> bufPoints = new List<PointF> { point1, point2, point3 };
+            return bufPoints;
         }
 
         private void RotateCoordinate()
