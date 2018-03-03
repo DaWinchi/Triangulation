@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.GraphicsBox = new System.Windows.Forms.PictureBox();
+            this.DrawBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.GraphicsBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -36,17 +37,28 @@
             // 
             this.GraphicsBox.Location = new System.Drawing.Point(24, 14);
             this.GraphicsBox.Name = "GraphicsBox";
-            this.GraphicsBox.Size = new System.Drawing.Size(779, 451);
+            this.GraphicsBox.Size = new System.Drawing.Size(600, 600);
             this.GraphicsBox.TabIndex = 0;
             this.GraphicsBox.TabStop = false;
             // 
-            // Form1
+            // DrawBtn
+            // 
+            this.DrawBtn.Location = new System.Drawing.Point(809, 419);
+            this.DrawBtn.Name = "DrawBtn";
+            this.DrawBtn.Size = new System.Drawing.Size(136, 63);
+            this.DrawBtn.TabIndex = 1;
+            this.DrawBtn.Text = "button1";
+            this.DrawBtn.UseVisualStyleBackColor = true;
+            this.DrawBtn.Click += new System.EventHandler(this.DrawBtn_Click);
+            // 
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(871, 501);
+            this.ClientSize = new System.Drawing.Size(957, 633);
+            this.Controls.Add(this.DrawBtn);
             this.Controls.Add(this.GraphicsBox);
-            this.Name = "Form1";
+            this.Name = "MainForm";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.GraphicsBox)).EndInit();
             this.ResumeLayout(false);
@@ -56,6 +68,7 @@
         #endregion
 
         private System.Windows.Forms.PictureBox GraphicsBox;
+        private System.Windows.Forms.Button DrawBtn;
     }
 }
 

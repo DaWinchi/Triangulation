@@ -17,16 +17,52 @@ namespace TriangleDeloneWithMagnetic
         public MainForm()
         {
             InitializeComponent();
-            parametrs = new Painter();
-            parametrs.xmax = 10;
-            parametrs.ymax = 10;
-            parametrs.xmin = -10;
-            parametrs.ymin = -10;
+            parametrs = new Painter
+            {
+                xmax = 20,
+                ymax = 20,
+                xmin = -20,
+                ymin = -20
+            };
+
+
         }
 
         Painter parametrs;
+        Bitmap bmp;
+        Graphics graph;
+        List<PointF> points;
+        private void Painting()
+        {
+            int width=GraphicsBox.Width, height= GraphicsBox.Height;
+
+            bmp = new Bitmap(width, height);
+            graph = Graphics.FromImage(bmp);
+            
+
+            SolidBrush brushBkgrd = new SolidBrush(Color.Black);
+            SolidBrush brushPoint = new SolidBrush(Color.Red); 
+            graph.FillRectangle(brushBkgrd, 0, 0, width, height);
 
 
+            Pen dotPen = new Pen(Color.Red, 4);
+
+            foreach (PointF point in points)
+            {
+                
+                graph.FillEllipse (brushPoint, (float)parametrs.X(width, point.X), (float)parametrs.Y(height, point.Y), 4, 4);
+            }
+            GraphicsBox.Image = bmp;
+        }
+
+        private void DrawBtn_Click(object sender, EventArgs e)
+        {
+            PointF point = new PointF(5, 6);
+            float angle = (float)(2 * Math.PI / 360 * 30);
+            Magnet magnet = new Magnet(10, 5, point,angle , (float)0.5); ;
+            points = magnet.ReturnRectangleDdiscret();
+            Painting();
+        }
     }
 
     public class Magnet
