@@ -70,14 +70,14 @@ namespace TriangleDeloneWithMagnetic
         {
             list_triangles.Clear();
             PointF center1 = new PointF(50, -50);
-            float angle1 = (float)(2 * Math.PI / 360 * 0);
+            float angle1 = (float)(2 * Math.PI / 360 * 45);
             PointF center2 = new PointF(0, 50);
             float angle2 = (float)(2 * Math.PI / 360 * 0);
             PointF centerGlobal = new PointF(0, 0);
 
-            Magnet magnet1 = new Magnet(20, 20, center1,angle1, 20);
-            Magnet magnet2 = new Magnet(20, 20, center2, angle2,20);
-            Magnet GlobalRect = new Magnet(160, 160, centerGlobal, (float)(2 * Math.PI / 360 * 30), 160);
+            Magnet magnet1 = new Magnet(20, 20, center1,angle1, 5);
+            Magnet magnet2 = new Magnet(20, 20, center2, angle2,5);
+            Magnet GlobalRect = new Magnet(160, 160, centerGlobal, (float)(2 * Math.PI / 360 * 0), 80);
             List<PointF> fake = new List<PointF>();
             fake.AddRange(magnet1.FakePoints());
             fake.AddRange(magnet2.FakePoints());
@@ -123,24 +123,24 @@ namespace TriangleDeloneWithMagnetic
             PointF C=new PointF(center.X+width/2, center.Y+height/2);
             PointF D=new PointF(center.X-width/2, center.Y+height/2);
           
-            for (float p=A.X; p<=B.X; p+=step)
+            for (float p=A.X; p<B.X; p+=step)
             {
                 PointF bufPoint = new PointF(p, A.Y);
                 points.Add(bufPoint);
             }
-            for (float p = B.Y; p <= C.Y; p += step)
+            for (float p = B.Y; p < C.Y; p += step)
             {
                 PointF bufPoint = new PointF(B.X, p);
                 points.Add(bufPoint);
             }
 
-            for (float p = C.X; p >= D.X; p -= step)
+            for (float p = C.X; p > D.X; p -= step)
             {
                 PointF bufPoint = new PointF(p, C.Y);
                 points.Add(bufPoint);
             }
 
-            for (float p = D.Y; p >= A.Y; p -= step)
+            for (float p = D.Y; p > A.Y; p -= step)
             {
                 PointF bufPoint = new PointF(A.X, p);
                 points.Add(bufPoint);
