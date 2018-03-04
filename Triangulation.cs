@@ -69,7 +69,7 @@ namespace TriangleDeloneWithMagnetic
         public List<Triangle> ReturnTriangles()
         {
             list_triangle = new List<Triangle>();
-            int count = points.Count();
+            int count = points.Count;
             for (int i = 0; i < count - 2; i++)
             {
                 for (int j = i + 1; j < count - 1; j++)
@@ -90,7 +90,7 @@ namespace TriangleDeloneWithMagnetic
                             if ((n == i) || (n == j) || (n == k)) continue;
                             float distance = (float)Math.Sqrt((points[n].X - param.center.X) * (points[n].X - param.center.X) +
                                 (points[n].Y - param.center.Y) * (points[n].Y - param.center.Y));
-                            if (((distance < param.R))||(distance>1e+6)||(param.R>1e+6)) { isOk = false; break; };
+                            if (((distance <=param.R))||(distance>1e+6)||(param.R>1e+6)) { isOk = false; break; };
 
                         }
                         if (isOk) list_triangle.Add(triangle);

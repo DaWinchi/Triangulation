@@ -69,15 +69,15 @@ namespace TriangleDeloneWithMagnetic
         private void DrawBtn_Click(object sender, EventArgs e)
         {
             list_triangles.Clear();
-            PointF center1 = new PointF(0, -50);
-            float angle1 = (float)(2 * Math.PI / 360 * 45);
+            PointF center1 = new PointF(50, -50);
+            float angle1 = (float)(2 * Math.PI / 360 * 0);
             PointF center2 = new PointF(0, 50);
             float angle2 = (float)(2 * Math.PI / 360 * 0);
             PointF centerGlobal = new PointF(0, 0);
 
-            Magnet magnet1 = new Magnet(20, 20, center1,angle1, 10);
-            Magnet magnet2 = new Magnet(20, 20, center2, angle2,10);
-            Magnet GlobalRect = new Magnet(160, 160, centerGlobal, 0, 40);
+            Magnet magnet1 = new Magnet(20, 20, center1,angle1, 20);
+            Magnet magnet2 = new Magnet(20, 20, center2, angle2,20);
+            Magnet GlobalRect = new Magnet(160, 160, centerGlobal, (float)(2 * Math.PI / 360 * 30), 160);
             List<PointF> fake = new List<PointF>();
             fake.AddRange(magnet1.FakePoints());
             fake.AddRange(magnet2.FakePoints());
