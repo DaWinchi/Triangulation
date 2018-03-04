@@ -32,7 +32,7 @@ namespace TriangleDeloneWithMagnetic
         Bitmap bmp;
         Graphics graph;
         List<PointF> points;
-        Triangulation triangulation = new Triangulation();
+        Triangulation triangulation;
         List<Triangle> list_triangles = new List<Triangle>();
 
         private void Painting()
@@ -68,8 +68,9 @@ namespace TriangleDeloneWithMagnetic
 
         private void DrawBtn_Click(object sender, EventArgs e)
         {
+            triangulation = new Triangulation();
             list_triangles.Clear();
-            PointF center1 = new PointF(50, -50);
+            PointF center1 = new PointF(0, -50);
             float angle1 = (float)(2 * Math.PI / 360 * 45);
             PointF center2 = new PointF(0, 50);
             float angle2 = (float)(2 * Math.PI / 360 * 0);
@@ -77,12 +78,12 @@ namespace TriangleDeloneWithMagnetic
 
             Magnet magnet1 = new Magnet(20, 20, center1,angle1, 5);
             Magnet magnet2 = new Magnet(20, 20, center2, angle2,5);
-            Magnet GlobalRect = new Magnet(160, 160, centerGlobal, (float)(2 * Math.PI / 360 * 0), 80);
+            Magnet GlobalRect = new Magnet(160, 160, centerGlobal, (float)(2 * Math.PI / 360 * 0), 20);
             List<PointF> fake = new List<PointF>();
             fake.AddRange(magnet1.FakePoints());
             fake.AddRange(magnet2.FakePoints());
-            PointF point1 = new PointF(200, 0); PointF point2 = new PointF(-200, 0);
-            PointF point3 = new PointF(0, 200); PointF point4 = new PointF(0, -200);
+            PointF point1 = new PointF(300, 0); PointF point2 = new PointF(-300, 0);
+            PointF point3 = new PointF(0, 300); PointF point4 = new PointF(0, -300);
 
             triangulation.AddGlobalPoints(point1, point2, point3, point4,
                                            GlobalRect.ReturnRectangleDdiscret(),
@@ -148,15 +149,13 @@ namespace TriangleDeloneWithMagnetic
         }
 
         public List<PointF> FakePoints ()
-        {           
+        {
 
-            float step_x = width / 4, step_y = height / 4;
+            Magnet magnet = new Magnet(width - width / 5, height - height / 5, center, angle, step/3);
 
-            PointF point1 = new PointF(center.X - step_x, center.Y - step_y);
-            PointF point2 = new PointF(center.X + step_x, center.Y + step_y);
-            PointF point3 = new PointF(center.X, center.Y);
-
-            List<PointF> bufPoints = new List<PointF> { point1, point2, point3 };
+            List<PointF> bufPoints = new List<PointF>();
+            bufPoints = magnet.ReturnRectangleDdiscret();
+            
             return bufPoints;
         }
 

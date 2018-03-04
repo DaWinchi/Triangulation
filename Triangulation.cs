@@ -63,6 +63,7 @@ namespace TriangleDeloneWithMagnetic
 
             param.R = Math.Sqrt((param.center.X - point1.X) * (param.center.X - point1.X) + (param.center.Y - point1.Y) * (param.center.Y - point1.Y));
 
+
             return param;
         }
 
@@ -90,14 +91,57 @@ namespace TriangleDeloneWithMagnetic
                             if ((n == i) || (n == j) || (n == k)) continue;
                             float distance = (float)Math.Sqrt((points[n].X - param.center.X) * (points[n].X - param.center.X) +
                                 (points[n].Y - param.center.Y) * (points[n].Y - param.center.Y));
-                            if (((distance <=param.R))||(distance>1e+6)||(param.R>1e+6)) { isOk = false; break; };
+                            if (((distance <= param.R)) || (distance > 1e+6) || (param.R > 1e+6)) { isOk = false; break; };
 
                         }
                         if (isOk) list_triangle.Add(triangle);
                     }
                 }
             }
+
             return SortTriangle();
+
+        }
+
+        public List<Triangle> AddPoint(PointF point)
+        {
+            int numDeleting = 0;
+            foreach (Triangle triangle in list_triangle)
+            {
+                float value1 = (triangle.point1.X - point.X) * (triangle.point2.Y - triangle.point1.Y)
+                                - (triangle.point2.X - triangle.point1.X) * (triangle.point1.Y - point.Y);
+                float value2 = (triangle.point2.X - point.X) * (triangle.point3.Y - triangle.point2.Y)
+                             - (triangle.point3.X - triangle.point2.X) * (triangle.point2.Y - point.Y);
+                float value3 = (triangle.point3.X - point.X) * (triangle.point1.Y - triangle.point3.Y)
+                             - (triangle.point1.X - triangle.point3.X) * (triangle.point3.Y - point.Y);
+
+                if (((value1 >= 0) && (value2 >= 0) && (value3 >= 0)) || ((value1 <= 0) && (value2 <= 0) && (value3 <= 0))) break;
+                numDeleting++;
+            }
+            
+            Triangle newTriangle1= new Triangle
+            {
+                point1 = list_triangle[numDeleting].point1,
+                point2 = list_triangle[numDeleting].point2,
+                point3 = point
+            };
+
+            Triangle newTriangle2 = new Triangle
+            {
+                point1 = list_triangle[numDeleting].point1,
+                point2 = point,
+                point3 = list_triangle[numDeleting].point3
+            };
+
+            Triangle newTriangle3 = new Triangle
+            {
+                point1 = point,
+                point2 = list_triangle[numDeleting].point2,
+                point3 = list_triangle[numDeleting].point3
+            };
+
+            list_triangle.RemoveAt(numDeleting);
+            list_triangle.Add(newTriangle1); list_triangle.Add(newTriangle2); list_triangle.Add(newTriangle3);
         }
 
         List<Triangle> SortTriangle()
@@ -128,7 +172,9 @@ namespace TriangleDeloneWithMagnetic
 
                 if (isOk) buftriangles.Add(triangle);
             }
-            return buftriangles;
+            list_triangle.Clear();
+            list_triangle.AddRange(buftriangles);
+            return list_triangle;
         }
 
     }
