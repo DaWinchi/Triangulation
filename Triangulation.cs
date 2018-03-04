@@ -14,10 +14,11 @@ namespace TriangleDeloneWithMagnetic
         public Triangulation()
         {
             points = new List<PointF>();
+            list_triangle = new List<Triangle>();
         }
 
         public List<PointF> points;
-        List<Triangle> list_triangle;
+        public List<Triangle> list_triangle;
         List<PointF> GlobalPoints;
         List<PointF> FakePoints;
 
@@ -69,7 +70,7 @@ namespace TriangleDeloneWithMagnetic
 
         public List<Triangle> ReturnTriangles()
         {
-            list_triangle = new List<Triangle>();
+            
             int count = points.Count;
             for (int i = 0; i < count - 2; i++)
             {
@@ -99,13 +100,14 @@ namespace TriangleDeloneWithMagnetic
                 }
             }
 
-            return SortTriangle();
+            //return SortTriangle();
+            return list_triangle;
 
         }
 
         public List<Triangle> AddPoint(PointF point)
         {
-            int numDeleting = 0;
+            int numDeleting = 0; bool isOk = false;
             foreach (Triangle triangle in list_triangle)
             {
                 float value1 = (triangle.point1.X - point.X) * (triangle.point2.Y - triangle.point1.Y)
@@ -115,36 +117,45 @@ namespace TriangleDeloneWithMagnetic
                 float value3 = (triangle.point3.X - point.X) * (triangle.point1.Y - triangle.point3.Y)
                              - (triangle.point1.X - triangle.point3.X) * (triangle.point3.Y - point.Y);
 
-                if (((value1 >= 0) && (value2 >= 0) && (value3 >= 0)) || ((value1 <= 0) && (value2 <= 0) && (value3 <= 0))) break;
+                if (((value1 >= 0) && (value2 >= 0) && (value3 >= 0)) || ((value1 <= 0) && (value2 <= 0) && (value3 <= 0))) { isOk = true;  break; }
                 numDeleting++;
             }
-            
-            Triangle newTriangle1= new Triangle
+            if (isOk)
             {
-                point1 = list_triangle[numDeleting].point1,
-                point2 = list_triangle[numDeleting].point2,
-                point3 = point
-            };
+                Triangle newTriangle1 = new Triangle
+                {
+                    point1 = list_triangle[numDeleting].point1,
+                    point2 = list_triangle[numDeleting].point2,
+                    point3 = point
+                };
 
-            Triangle newTriangle2 = new Triangle
+                Triangle newTriangle2 = new Triangle
+                {
+                    point1 = list_triangle[numDeleting].point1,
+                    point2 = point,
+                    point3 = list_triangle[numDeleting].point3
+                };
+
+                Triangle newTriangle3 = new Triangle
+                {
+                    point1 = point,
+                    point2 = list_triangle[numDeleting].point2,
+                    point3 = list_triangle[numDeleting].point3
+                };
+
+                list_triangle.RemoveAt(numDeleting);
+                list_triangle.Add(newTriangle1); list_triangle.Add(newTriangle2); list_triangle.Add(newTriangle3);
+
+            }
+            else
             {
-                point1 = list_triangle[numDeleting].point1,
-                point2 = point,
-                point3 = list_triangle[numDeleting].point3
-            };
-
-            Triangle newTriangle3 = new Triangle
-            {
-                point1 = point,
-                point2 = list_triangle[numDeleting].point2,
-                point3 = list_triangle[numDeleting].point3
-            };
-
-            list_triangle.RemoveAt(numDeleting);
-            list_triangle.Add(newTriangle1); list_triangle.Add(newTriangle2); list_triangle.Add(newTriangle3);
+                points.Add(point);
+                ReturnTriangles();
+            }
+            return list_triangle;
         }
 
-        List<Triangle> SortTriangle()
+        public List<Triangle> SortTriangle()
         {
             List<Triangle> buftriangles = new List<Triangle>();
             foreach (Triangle triangle in list_triangle)
@@ -169,6 +180,17 @@ namespace TriangleDeloneWithMagnetic
                         isOk = false; break;
                     }
                 }
+
+                for (int i = 0; i < GlobalRectangle.Count; i++)
+                {
+                    if ((triangle.point1 == GlobalRectangle[i])
+                        || (triangle.point2 == GlobalRectangle[i])
+                        || (triangle.point3 == GlobalRectangle[i]))
+                    {
+                        isOk = false; break;
+                    }
+                }
+
 
                 if (isOk) buftriangles.Add(triangle);
             }

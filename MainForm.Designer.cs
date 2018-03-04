@@ -28,8 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.GraphicsBox = new System.Windows.Forms.PictureBox();
             this.DrawBtn = new System.Windows.Forms.Button();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.GraphicsBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -51,6 +53,10 @@
             this.DrawBtn.UseVisualStyleBackColor = true;
             this.DrawBtn.Click += new System.EventHandler(this.DrawBtn_Click);
             // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -69,6 +75,7 @@
 
         private System.Windows.Forms.PictureBox GraphicsBox;
         private System.Windows.Forms.Button DrawBtn;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 
