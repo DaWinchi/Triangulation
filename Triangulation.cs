@@ -68,10 +68,10 @@ namespace TriangleDeloneWithMagnetic
             return param;
         }
 
-        public List<Triangle> ReturnTriangles()
+        public List<Triangle> ReturnAllTriangles(List<PointF> p_points)
         {
-            
-            int count = points.Count;
+            List<Triangle> list_trianglesBuf = new List<Triangle>();
+            int count = p_points.Count;
             for (int i = 0; i < count - 2; i++)
             {
                 for (int j = i + 1; j < count - 1; j++)
@@ -81,90 +81,61 @@ namespace TriangleDeloneWithMagnetic
                     {
                         Triangle triangle = new Triangle();
                         ParametrsEllipse param = new ParametrsEllipse();
-                        triangle.point1 = points[i];
-                        triangle.point2 = points[j];
-                        triangle.point3 = points[k];
+                        triangle.point1 = p_points[i];
+                        triangle.point2 = p_points[j];
+                        triangle.point3 = p_points[k];
                         param = SearchEllipse(triangle);
 
                         bool isOk = true;
                         for (int n = 0; n < count; n++)
                         {
                             if ((n == i) || (n == j) || (n == k)) continue;
-                            float distance = (float)Math.Sqrt((points[n].X - param.center.X) * (points[n].X - param.center.X) +
-                                (points[n].Y - param.center.Y) * (points[n].Y - param.center.Y));
+                            float distance = (float)Math.Sqrt((p_points[n].X - param.center.X) * (p_points[n].X - param.center.X) +
+                                (p_points[n].Y - param.center.Y) * (p_points[n].Y - param.center.Y));
                             if (((distance <= param.R)) || (distance > 1e+6) || (param.R > 1e+6)) { isOk = false; break; };
 
                         }
-                        if (isOk) list_triangle.Add(triangle);
+                        if (isOk) list_trianglesBuf.Add(triangle);
                     }
                 }
             }
 
-            return SortTriangle();
-            //return list_triangle;
+            //return SortTriangle();
+            list_triangle.AddRange(list_trianglesBuf);
+            return list_triangle;
 
         }
 
         public List<Triangle> AddPoint(PointF point)
         {
-            int numDeleting = 0; bool isOk = false;
-            //foreach (Triangle triangle in list_triangle)
-            //{
-            //    float value1 = (triangle.point1.X - point.X) * (triangle.point2.Y - triangle.point1.Y)
-            //                    - (triangle.point2.X - triangle.point1.X) * (triangle.point1.Y - point.Y);
-            //    float value2 = (triangle.point2.X - point.X) * (triangle.point3.Y - triangle.point2.Y)
-            //                 - (triangle.point3.X - triangle.point2.X) * (triangle.point2.Y - point.Y);
-            //    float value3 = (triangle.point3.X - point.X) * (triangle.point1.Y - triangle.point3.Y)
-            //                 - (triangle.point1.X - triangle.point3.X) * (triangle.point3.Y - point.Y);
-
-            //    if (((value1 >= 0) && (value2 >= 0) && (value3 >= 0)) || ((value1 <= 0) && (value2 <= 0) && (value3 <= 0))) { isOk = true;  break; }
-            //    numDeleting++;
-            //}
-
-
-            foreach (Triangle triangle in list_triangle)
-            {
-                ParametrsEllipse param = new ParametrsEllipse();
-                param = SearchEllipse(triangle);
-
-                float distance = (float)Math.Sqrt((point.X - param.center.X) * (point.X - param.center.X) +
-                               (point.Y - param.center.Y) * (point.Y - param.center.Y));
-                if (distance < param.R) { isOk = false; break; }
-                numDeleting++;
-            }
-
-            if (isOk)
-            {
-                Triangle newTriangle1 = new Triangle
+            List<PointF> newPoints = new List<PointF>();
+            int numDeleting=0;
+            while(numDeleting<list_triangle.Count)
+            { 
+            numDeleting = 0;
+                foreach (Triangle triangle in list_triangle)
                 {
-                    point1 = list_triangle[numDeleting].point1,
-                    point2 = list_triangle[numDeleting].point2,
-                    point3 = point
-                };
+                    ParametrsEllipse param = new ParametrsEllipse();
+                    param = SearchEllipse(triangle);
 
-                Triangle newTriangle2 = new Triangle
-                {
-                    point1 = list_triangle[numDeleting].point1,
-                    point2 = point,
-                    point3 = list_triangle[numDeleting].point3
-                };
-
-                Triangle newTriangle3 = new Triangle
-                {
-                    point1 = point,
-                    point2 = list_triangle[numDeleting].point2,
-                    point3 = list_triangle[numDeleting].point3
-                };
-
+                    float distance = (float)Math.Sqrt((point.X - param.center.X) * (point.X - param.center.X) +
+                                   (point.Y - param.center.Y) * (point.Y - param.center.Y));
+                    if (distance < param.R)
+                    {
+                        foreach (PointF bufPoint in newPoints)
+                        {
+                            if (triangle.point1 != bufPoint) newPoints.Add(triangle.point1);
+                            if (triangle.point2 != bufPoint) newPoints.Add(triangle.point2);
+                            if (triangle.point3 != bufPoint) newPoints.Add(triangle.point3);
+                        }
+                        break;
+                    }
+                    numDeleting++;
+                }
                 list_triangle.RemoveAt(numDeleting);
-                list_triangle.Add(newTriangle1); list_triangle.Add(newTriangle2); list_triangle.Add(newTriangle3);
+            }
 
-            }
-            else
-            {
-                points.Add(point);
-                ReturnTriangles();
-            }
+           
             return list_triangle;
         }
 
@@ -194,7 +165,7 @@ namespace TriangleDeloneWithMagnetic
                     }
                 }
 
-               
+
 
 
                 if (isOk) buftriangles.Add(triangle);

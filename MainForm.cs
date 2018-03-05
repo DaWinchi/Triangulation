@@ -94,12 +94,12 @@ namespace TriangleDeloneWithMagnetic
                                            magnet1.ReturnRectangleDdiscret(),
                                            magnet2.ReturnRectangleDdiscret(),
                                            fake);
-            list_triangles.AddRange(triangulation.ReturnTriangles());
+            list_triangles.AddRange(triangulation.ReturnAllTriangles(triangulation.points));
 
             x_now = GlobalRect.A.X + step_x;
             y_now = GlobalRect.A.Y + step_y;
 
-            //timer1.Start();
+          //  timer1.Start();
             Painting();
         }
 
