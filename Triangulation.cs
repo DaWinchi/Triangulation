@@ -100,26 +100,39 @@ namespace TriangleDeloneWithMagnetic
                 }
             }
 
-            //return SortTriangle();
-            return list_triangle;
+            return SortTriangle();
+            //return list_triangle;
 
         }
 
         public List<Triangle> AddPoint(PointF point)
         {
             int numDeleting = 0; bool isOk = false;
+            //foreach (Triangle triangle in list_triangle)
+            //{
+            //    float value1 = (triangle.point1.X - point.X) * (triangle.point2.Y - triangle.point1.Y)
+            //                    - (triangle.point2.X - triangle.point1.X) * (triangle.point1.Y - point.Y);
+            //    float value2 = (triangle.point2.X - point.X) * (triangle.point3.Y - triangle.point2.Y)
+            //                 - (triangle.point3.X - triangle.point2.X) * (triangle.point2.Y - point.Y);
+            //    float value3 = (triangle.point3.X - point.X) * (triangle.point1.Y - triangle.point3.Y)
+            //                 - (triangle.point1.X - triangle.point3.X) * (triangle.point3.Y - point.Y);
+
+            //    if (((value1 >= 0) && (value2 >= 0) && (value3 >= 0)) || ((value1 <= 0) && (value2 <= 0) && (value3 <= 0))) { isOk = true;  break; }
+            //    numDeleting++;
+            //}
+
+
             foreach (Triangle triangle in list_triangle)
             {
-                float value1 = (triangle.point1.X - point.X) * (triangle.point2.Y - triangle.point1.Y)
-                                - (triangle.point2.X - triangle.point1.X) * (triangle.point1.Y - point.Y);
-                float value2 = (triangle.point2.X - point.X) * (triangle.point3.Y - triangle.point2.Y)
-                             - (triangle.point3.X - triangle.point2.X) * (triangle.point2.Y - point.Y);
-                float value3 = (triangle.point3.X - point.X) * (triangle.point1.Y - triangle.point3.Y)
-                             - (triangle.point1.X - triangle.point3.X) * (triangle.point3.Y - point.Y);
+                ParametrsEllipse param = new ParametrsEllipse();
+                param = SearchEllipse(triangle);
 
-                if (((value1 >= 0) && (value2 >= 0) && (value3 >= 0)) || ((value1 <= 0) && (value2 <= 0) && (value3 <= 0))) { isOk = true;  break; }
+                float distance = (float)Math.Sqrt((point.X - param.center.X) * (point.X - param.center.X) +
+                               (point.Y - param.center.Y) * (point.Y - param.center.Y));
+                if (distance < param.R) { isOk = false; break; }
                 numDeleting++;
             }
+
             if (isOk)
             {
                 Triangle newTriangle1 = new Triangle
@@ -181,15 +194,7 @@ namespace TriangleDeloneWithMagnetic
                     }
                 }
 
-                for (int i = 0; i < GlobalRectangle.Count; i++)
-                {
-                    if ((triangle.point1 == GlobalRectangle[i])
-                        || (triangle.point2 == GlobalRectangle[i])
-                        || (triangle.point3 == GlobalRectangle[i]))
-                    {
-                        isOk = false; break;
-                    }
-                }
+               
 
 
                 if (isOk) buftriangles.Add(triangle);

@@ -35,7 +35,7 @@ namespace TriangleDeloneWithMagnetic
         Triangulation triangulation;
 
         Magnet GlobalRect;
-        float step_x = 30F, step_y = 30F, x_now, y_now;
+        float step_x = 7F, step_y = 7F, x_now, y_now;
 
         List<Triangle> list_triangles = new List<Triangle>();
 
@@ -80,12 +80,12 @@ namespace TriangleDeloneWithMagnetic
             float angle2 = (float)(2 * Math.PI / 360 * 0);
             PointF centerGlobal = new PointF(0, 0);
 
-            Magnet magnet1 = new Magnet(20, 20, center1, angle1, 20);
-            Magnet magnet2 = new Magnet(20, 20, center2, angle2, 20);
+            Magnet magnet1 = new Magnet(40, 20, center1, angle1, 10);
+            Magnet magnet2 = new Magnet(40, 20, center2, angle2, 10);
             GlobalRect = new Magnet(160, 160, centerGlobal, (float)(2 * Math.PI / 360 * 0), 20);
             List<PointF> fake = new List<PointF>();
-            fake.AddRange(magnet1.FakePoints());
-            fake.AddRange(magnet2.FakePoints());
+            fake.Add(magnet1.FakePoints());
+            fake.Add(magnet2.FakePoints());
             PointF point1 = new PointF(300, 0); PointF point2 = new PointF(-300, 0);
             PointF point3 = new PointF(0, 300); PointF point4 = new PointF(0, -300);
 
@@ -99,7 +99,7 @@ namespace TriangleDeloneWithMagnetic
             x_now = GlobalRect.A.X + step_x;
             y_now = GlobalRect.A.Y + step_y;
 
-            timer1.Start();
+            //timer1.Start();
             Painting();
         }
 
@@ -144,11 +144,11 @@ namespace TriangleDeloneWithMagnetic
         private void CreateDiscret()
         {
             points.Clear();
-
-            A = new PointF(center.X - width / 2, center.Y - height / 2);
-            B = new PointF(center.X + width / 2, center.Y - height / 2);
-            C = new PointF(center.X + width / 2, center.Y + height / 2);
-            D = new PointF(center.X - width / 2, center.Y + height / 2);
+            Random rand = new Random();
+            A = new PointF(center.X - width / 2+(float)rand.NextDouble()/10, center.Y - height / 2+ (float)rand.NextDouble() / 10);
+            B = new PointF(center.X + width / 2+ (float)rand.NextDouble() / 10, center.Y - height / 2+ (float)rand.NextDouble() / 10);
+            C = new PointF(center.X + width / 2+ (float)rand.NextDouble() / 10, center.Y + height / 2+ (float)rand.NextDouble() / 10);
+            D = new PointF(center.X - width / 2+ (float)rand.NextDouble() / 10, center.Y + height / 2+ (float)rand.NextDouble() / 10);
 
             for (float p = A.X; p < B.X; p += step)
             {
@@ -174,15 +174,21 @@ namespace TriangleDeloneWithMagnetic
             }
         }
 
-        public List<PointF> FakePoints()
+        public PointF FakePoints()
         {
 
-            Magnet magnet = new Magnet(width - width / 5, height - height / 5, center, angle, step / 3);
+            //Magnet magnet = new Magnet(width - width / 5, height - height / 5, center, angle, step / 3);
 
-            List<PointF> bufPoints = new List<PointF>();
-            bufPoints = magnet.ReturnRectangleDdiscret();
+            //List<PointF> bufPoints = new List<PointF>();
+            //bufPoints = magnet.ReturnRectangleDdiscret();
+            PointF bufPoint = new PointF
+            {
+                X = (float)(center.X * Math.Cos(angle) - center.Y * Math.Sin(angle)),
+                Y = (float)(center.X * Math.Sin(angle) + center.Y * Math.Cos(angle))
+            };
 
-            return bufPoints;
+
+            return bufPoint;
         }
 
         private void RotateCoordinate()
