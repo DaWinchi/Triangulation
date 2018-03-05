@@ -109,10 +109,12 @@ namespace TriangleDeloneWithMagnetic
         public List<Triangle> AddPoint(PointF point)
         {
             List<PointF> newPoints = new List<PointF>();
-            int numDeleting=0;
-            while(numDeleting<list_triangle.Count)
-            { 
-            numDeleting = 0;
+            newPoints.Add(point);
+            int numDeleting = 0;
+            while (numDeleting < list_triangle.Count)
+            {
+                bool detected = false;
+                numDeleting = 0;
                 foreach (Triangle triangle in list_triangle)
                 {
                     ParametrsEllipse param = new ParametrsEllipse();
@@ -122,21 +124,26 @@ namespace TriangleDeloneWithMagnetic
                                    (point.Y - param.center.Y) * (point.Y - param.center.Y));
                     if (distance < param.R)
                     {
+                        bool new1 = false, new2 = false, new3 = false;
                         foreach (PointF bufPoint in newPoints)
                         {
-                            if (triangle.point1 != bufPoint) newPoints.Add(triangle.point1);
-                            if (triangle.point2 != bufPoint) newPoints.Add(triangle.point2);
-                            if (triangle.point3 != bufPoint) newPoints.Add(triangle.point3);
+                            if (triangle.point1 != bufPoint) new1 = true;
+                            if (triangle.point2 != bufPoint) new2 = true;
+                            if (triangle.point3 != bufPoint) new3 = true;
                         }
+                        if(new1) newPoints.Add(triangle.point1);
+                        if (new2) newPoints.Add(triangle.point2);
+                        if (new3) newPoints.Add(triangle.point3);
+                        detected = true;
                         break;
                     }
                     numDeleting++;
                 }
-                list_triangle.RemoveAt(numDeleting);
+                if (detected) list_triangle.RemoveAt(numDeleting);
             }
+            
 
-           
-            return list_triangle;
+            return ReturnAllTriangles(newPoints);
         }
 
         public List<Triangle> SortTriangle()

@@ -99,7 +99,7 @@ namespace TriangleDeloneWithMagnetic
             x_now = GlobalRect.A.X + step_x;
             y_now = GlobalRect.A.Y + step_y;
 
-          //  timer1.Start();
+           timer1.Start();
             Painting();
         }
 
@@ -108,13 +108,14 @@ namespace TriangleDeloneWithMagnetic
             if (x_now > GlobalRect.C.X)
             {
                 y_now += step_y;
-                if (y_now > GlobalRect.C.Y) { timer1.Stop(); list_triangles.Clear(); list_triangles.AddRange(triangulation.SortTriangle()); Painting(); }
+                if (y_now > GlobalRect.C.Y) {
+                    timer1.Stop(); list_triangles.Clear(); list_triangles.AddRange(triangulation.SortTriangle()); Painting(); }
                 x_now = GlobalRect.A.X;
             }
             PointF point = new PointF(x_now, y_now);
-            triangulation.AddPoint(point);
+            
             list_triangles.Clear();
-            list_triangles.AddRange(triangulation.list_triangle);
+            list_triangles.AddRange(triangulation.AddPoint(point));
             x_now += step_x;
             Painting();
 
