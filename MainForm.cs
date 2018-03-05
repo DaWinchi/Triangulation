@@ -35,7 +35,8 @@ namespace TriangleDeloneWithMagnetic
         Triangulation triangulation;
 
         Magnet GlobalRect;
-        float step_x = 7F, step_y = 7F, x_now, y_now;
+        
+        float step_x = 10F, step_y = 10F, x_now, y_now;
 
         List<Triangle> list_triangles = new List<Triangle>();
 
@@ -95,6 +96,7 @@ namespace TriangleDeloneWithMagnetic
                                            magnet2.ReturnRectangleDdiscret(),
                                            fake);
             list_triangles.AddRange(triangulation.ReturnAllTriangles(triangulation.points));
+            triangulation.UpdateListTriangle(list_triangles);
 
             x_now = GlobalRect.A.X + step_x;
             y_now = GlobalRect.A.Y + step_y;
@@ -112,8 +114,9 @@ namespace TriangleDeloneWithMagnetic
                     timer1.Stop(); list_triangles.Clear(); list_triangles.AddRange(triangulation.SortTriangle()); Painting(); }
                 x_now = GlobalRect.A.X;
             }
-            PointF point = new PointF(x_now, y_now);
-            
+
+            Random rand = new Random();
+            PointF point = new PointF(x_now+(float)rand.NextDouble()/100, y_now+(float)rand.NextDouble() / 100);
             list_triangles.Clear();
             list_triangles.AddRange(triangulation.AddPoint(point));
             x_now += step_x;

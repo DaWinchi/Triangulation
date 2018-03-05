@@ -100,10 +100,14 @@ namespace TriangleDeloneWithMagnetic
                 }
             }
 
-            //return SortTriangle();
-            list_triangle.AddRange(list_trianglesBuf);
-            return list_triangle;
 
+            return list_trianglesBuf;
+        }
+
+        public List<Triangle> UpdateListTriangle(List<Triangle> p_list)
+        {
+            list_triangle.AddRange(p_list);
+            return list_triangle;
         }
 
         public List<Triangle> AddPoint(PointF point)
@@ -124,14 +128,14 @@ namespace TriangleDeloneWithMagnetic
                                    (point.Y - param.center.Y) * (point.Y - param.center.Y));
                     if (distance < param.R)
                     {
-                        bool new1 = false, new2 = false, new3 = false;
+                        bool new1 = true, new2 = true, new3 = true;
                         foreach (PointF bufPoint in newPoints)
                         {
-                            if (triangle.point1 != bufPoint) new1 = true;
-                            if (triangle.point2 != bufPoint) new2 = true;
-                            if (triangle.point3 != bufPoint) new3 = true;
+                            if (triangle.point1 == bufPoint) new1 = false;
+                            if (triangle.point2 == bufPoint) new2 = false;
+                            if (triangle.point3 == bufPoint) new3 = false;
                         }
-                        if(new1) newPoints.Add(triangle.point1);
+                        if (new1) newPoints.Add(triangle.point1);
                         if (new2) newPoints.Add(triangle.point2);
                         if (new3) newPoints.Add(triangle.point3);
                         detected = true;
@@ -141,9 +145,28 @@ namespace TriangleDeloneWithMagnetic
                 }
                 if (detected) list_triangle.RemoveAt(numDeleting);
             }
-            
 
-            return ReturnAllTriangles(newPoints);
+            List<Triangle> buffer_list2 = new List<Triangle>();
+            buffer_list2.AddRange(ReturnAllTriangles(newPoints));
+
+            numDeleting = 0;
+            while (numDeleting < buffer_list2.Count)
+            {
+                bool detected = false;
+                numDeleting = 0;
+                foreach (Triangle triangle in buffer_list2)
+                {
+                    if (!((triangle.point1 == point) || (triangle.point1 == point) || (triangle.point1 == point)))
+                    {
+                        detected = true;
+                        break;
+                    }
+                    numDeleting++;
+                }
+                if (detected) buffer_list2.RemoveAt(numDeleting);
+
+            }
+            return UpdateListTriangle(buffer_list2);
         }
 
         public List<Triangle> SortTriangle()
@@ -170,10 +193,7 @@ namespace TriangleDeloneWithMagnetic
                     {
                         isOk = false; break;
                     }
-                }
-
-
-
+                }                
 
                 if (isOk) buftriangles.Add(triangle);
             }
