@@ -63,7 +63,7 @@ namespace TriangleDeloneWithMagnetic
         public List< PointF> FakePoints()
         {
 
-            Magnet magnet = new Magnet(width - width / 5, height - height / 5, center, angle, step / 3);
+            Magnet magnet = new Magnet(width - width / 6, height - height / 6, center, angle, step/2);
 
             List<PointF> bufPoints = new List<PointF>();
             bufPoints = magnet.ReturnRectangleDdiscret();

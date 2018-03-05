@@ -23,27 +23,26 @@ namespace TriangleDeloneWithMagnetic
         List<PointF> FakePoints;
 
         List<PointF> GlobalRectangle;
-        List<PointF> Magnet1;
-        List<PointF> Magnet2;
+        Magnet Magnet1;
+        Magnet Magnet2;
         struct ParametrsEllipse { public double R; public PointF center; }
 
         public void AddGlobalPoints(PointF p1, PointF p2, PointF p3, PointF p4,
                      List<PointF> globRect,
-                     List<PointF> magnet1,
-                     List<PointF> magnet2,
-                     List<PointF> fake)
+                     Magnet magnet1,
+                     Magnet magnet2)
         {
             GlobalPoints = new List<PointF> { p1, p2, p3, p4 };
             GlobalRectangle = new List<PointF>(); GlobalRectangle.AddRange(globRect);
-            Magnet1 = new List<PointF>(); Magnet1.AddRange(magnet1);
-            Magnet2 = new List<PointF>(); Magnet2.AddRange(magnet2);
-            FakePoints = new List<PointF>(); FakePoints.AddRange(fake);
+            Magnet1 = magnet1; 
+            Magnet2 = magnet2; 
+            FakePoints = new List<PointF>(); FakePoints.AddRange(Magnet1.FakePoints()); FakePoints.AddRange(Magnet2.FakePoints());
 
             points.AddRange(FakePoints);
             points.AddRange(GlobalPoints);
             points.AddRange(GlobalRectangle);
-            points.AddRange(Magnet1);
-            points.AddRange(Magnet2);
+            points.AddRange(Magnet1.ReturnRectangleDdiscret());
+            points.AddRange(Magnet2.ReturnRectangleDdiscret());
         }
 
         private ParametrsEllipse SearchEllipse(Triangle triangle)
@@ -110,63 +109,114 @@ namespace TriangleDeloneWithMagnetic
             return list_triangle;
         }
 
+        public bool IsInMagnets (PointF point)
+        {
+            Triangle magnet11 = new Triangle
+            {
+                point1 = Magnet1.A,
+                point2 = Magnet1.B,
+                point3 = Magnet1.C
+            };
+
+            Triangle magnet12 = new Triangle
+            {
+                point1 = Magnet1.A,
+                point2 = Magnet1.D,
+                point3 = Magnet1.C
+            };
+            Triangle magnet21 = new Triangle
+            {
+                point1 = Magnet2.A,
+                point2 = Magnet2.B,
+                point3 = Magnet2.C
+            };
+            Triangle magnet22 = new Triangle
+            {
+                point1 = Magnet2.A,
+                point2 = Magnet2.D,
+                point3 = Magnet2.C
+            };
+
+            List<Triangle> bufList = new List<Triangle> { magnet11, magnet12, magnet21, magnet22 };
+            bool pointInMagnets = false;
+
+            foreach (Triangle triangle in bufList)
+            {
+                float value1 = (triangle.point1.X - point.X) * (triangle.point2.Y - triangle.point1.Y)
+                               - (triangle.point2.X - triangle.point1.X) * (triangle.point1.Y - point.Y);
+                float value2 = (triangle.point2.X - point.X) * (triangle.point3.Y - triangle.point2.Y)
+                             - (triangle.point3.X - triangle.point2.X) * (triangle.point2.Y - point.Y);
+                float value3 = (triangle.point3.X - point.X) * (triangle.point1.Y - triangle.point3.Y)
+                             - (triangle.point1.X - triangle.point3.X) * (triangle.point3.Y - point.Y);
+
+                if (((value1 >= 0) && (value2 >= 0) && (value3 >= 0)) || ((value1 <= 0) && (value2 <= 0) && (value3 <= 0))) { pointInMagnets = true; break; }
+            }
+
+            return pointInMagnets;
+        }
+
         public List<Triangle> AddPoint(PointF point)
         {
-            List<PointF> newPoints = new List<PointF>();
-            newPoints.Add(point);
-            int numDeleting = 0;
-            while (numDeleting < list_triangle.Count)
-            {
-                bool detected = false;
-                numDeleting = 0;
-                foreach (Triangle triangle in list_triangle)
-                {
-                    ParametrsEllipse param = new ParametrsEllipse();
-                    param = SearchEllipse(triangle);
 
-                    float distance = (float)Math.Sqrt((point.X - param.center.X) * (point.X - param.center.X) +
-                                   (point.Y - param.center.Y) * (point.Y - param.center.Y));
-                    if (distance < param.R)
+            if (!IsInMagnets(point))
+            {
+                List<PointF> newPoints = new List<PointF>();
+                newPoints.Add(point);
+                int numDeleting = 0;
+                while (numDeleting < list_triangle.Count)
+                {
+                    bool detected = false;
+                    numDeleting = 0;
+                    foreach (Triangle triangle in list_triangle)
                     {
-                        bool new1 = true, new2 = true, new3 = true;
-                        foreach (PointF bufPoint in newPoints)
+                        ParametrsEllipse param = new ParametrsEllipse();
+                        param = SearchEllipse(triangle);
+
+                        float distance = (float)Math.Sqrt((point.X - param.center.X) * (point.X - param.center.X) +
+                                       (point.Y - param.center.Y) * (point.Y - param.center.Y));
+                        if (distance < param.R)
                         {
-                            if (triangle.point1 == bufPoint) new1 = false;
-                            if (triangle.point2 == bufPoint) new2 = false;
-                            if (triangle.point3 == bufPoint) new3 = false;
+                            bool new1 = true, new2 = true, new3 = true;
+                            foreach (PointF bufPoint in newPoints)
+                            {
+                                if (triangle.point1 == bufPoint) new1 = false;
+                                if (triangle.point2 == bufPoint) new2 = false;
+                                if (triangle.point3 == bufPoint) new3 = false;
+                            }
+                            if (new1) newPoints.Add(triangle.point1);
+                            if (new2) newPoints.Add(triangle.point2);
+                            if (new3) newPoints.Add(triangle.point3);
+                            detected = true;
+                            break;
                         }
-                        if (new1) newPoints.Add(triangle.point1);
-                        if (new2) newPoints.Add(triangle.point2);
-                        if (new3) newPoints.Add(triangle.point3);
-                        detected = true;
-                        break;
+                        numDeleting++;
                     }
-                    numDeleting++;
+                    if (detected) list_triangle.RemoveAt(numDeleting);
                 }
-                if (detected) list_triangle.RemoveAt(numDeleting);
-            }
 
-            List<Triangle> buffer_list2 = new List<Triangle>();
-            buffer_list2.AddRange(ReturnAllTriangles(newPoints));
+                List<Triangle> buffer_list2 = new List<Triangle>();
+                buffer_list2.AddRange(ReturnAllTriangles(newPoints));
 
-            numDeleting = 0;
-            while (numDeleting < buffer_list2.Count)
-            {
-                bool detected = false;
                 numDeleting = 0;
-                foreach (Triangle triangle in buffer_list2)
+                while (numDeleting < buffer_list2.Count)
                 {
-                    if (!((triangle.point1 == point) || (triangle.point1 == point) || (triangle.point1 == point)))
+                    bool detected = false;
+                    numDeleting = 0;
+                    foreach (Triangle triangle in buffer_list2)
                     {
-                        detected = true;
-                        break;
+                        if (!((triangle.point1 == point) || (triangle.point1 == point) || (triangle.point1 == point)))
+                        {
+                            detected = true;
+                            break;
+                        }
+                        numDeleting++;
                     }
-                    numDeleting++;
-                }
-                if (detected) buffer_list2.RemoveAt(numDeleting);
+                    if (detected) buffer_list2.RemoveAt(numDeleting);
 
+                }
+                return UpdateListTriangle(buffer_list2);
             }
-            return UpdateListTriangle(buffer_list2);
+            else return list_triangle;
         }
 
         public List<Triangle> SortTriangle()

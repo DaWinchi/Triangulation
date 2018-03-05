@@ -36,7 +36,7 @@ namespace TriangleDeloneWithMagnetic
 
         Magnet GlobalRect;
         
-        float step_x = 10F, step_y = 10F, x_now, y_now;
+        float step_x = 7F, step_y = 7F, x_now, y_now;
 
         List<Triangle> list_triangles = new List<Triangle>();
 
@@ -78,23 +78,19 @@ namespace TriangleDeloneWithMagnetic
             PointF center1 = new PointF(0, -50);
             float angle1 = (float)(2 * Math.PI / 360 * 45);
             PointF center2 = new PointF(0, 50);
-            float angle2 = (float)(2 * Math.PI / 360 * 0);
+            float angle2 = (float)(2 * Math.PI / 360 * 30);
             PointF centerGlobal = new PointF(0, 0);
 
-            Magnet magnet1 = new Magnet(40, 20, center1, angle1, 10);
-            Magnet magnet2 = new Magnet(40, 20, center2, angle2, 10);
-            GlobalRect = new Magnet(160, 160, centerGlobal, (float)(2 * Math.PI / 360 * 0), 20);
-            List<PointF> fake = new List<PointF>();
-            fake.AddRange(magnet1.FakePoints());
-            fake.AddRange(magnet2.FakePoints());
+            Magnet magnet1 = new Magnet(40, 20, center1, angle1, 5);
+            Magnet magnet2 = new Magnet(40, 20, center2, angle2, 5);
+            GlobalRect = new Magnet(160, 160, centerGlobal, (float)(2 * Math.PI / 360 * 0), 20);           
             PointF point1 = new PointF(300, 0); PointF point2 = new PointF(-300, 0);
             PointF point3 = new PointF(0, 300); PointF point4 = new PointF(0, -300);
 
             triangulation.AddGlobalPoints(point1, point2, point3, point4,
                                            GlobalRect.ReturnRectangleDdiscret(),
-                                           magnet1.ReturnRectangleDdiscret(),
-                                           magnet2.ReturnRectangleDdiscret(),
-                                           fake);
+                                           magnet1,
+                                           magnet2);
             list_triangles.AddRange(triangulation.ReturnAllTriangles(triangulation.points));
             triangulation.UpdateListTriangle(list_triangles);
 
@@ -110,7 +106,7 @@ namespace TriangleDeloneWithMagnetic
             if (x_now > GlobalRect.C.X)
             {
                 y_now += step_y;
-                if (y_now > GlobalRect.C.Y) {
+                if (y_now > GlobalRect.C.Y-step_y/2) {
                     timer1.Stop(); list_triangles.Clear(); list_triangles.AddRange(triangulation.SortTriangle()); Painting(); }
                 x_now = GlobalRect.A.X;
             }
