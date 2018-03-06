@@ -25,8 +25,8 @@ namespace TriangleDeloneWithMagnetic
                 ymin = -100
             };
             points = new List<PointF>();
-            magnet1 = new Magnet(40, 20, center1, (float)(2 * Math.PI / 360 * 45), 5);
-            magnet2 = new Magnet(40, 20, center2, (float)(2 * Math.PI / 360 * 30), 5);
+            magnet1 = new Magnet(40, 20, center1, (float)(2 * Math.PI / 360 * 45), step_x);
+            magnet2 = new Magnet(40, 20, center2, (float)(2 * Math.PI / 360 * 30), step_x);
             GlobalRect = new Magnet(160, 160, centerGlobal, (float)(2 * Math.PI / 360 * 0), 20);
             points.AddRange(magnet1.ReturnRectangleDdiscret()); points.AddRange(magnet2.ReturnRectangleDdiscret());
             points.AddRange(GlobalRect.ReturnRectangleDdiscret());
@@ -41,6 +41,14 @@ namespace TriangleDeloneWithMagnetic
             ScrollAngle.Minimum = 0;
             ScrollAngle.Maximum = 360;
             ScrollAngle.Value=45;
+
+            StepXBox.Text = "7";
+            StepYBox.Text = "7";
+
+            Width1Box.Text = magnet1.width.ToString();
+            Width2Box.Text = magnet2.width.ToString();
+            Height1Box.Text = magnet1.height.ToString();
+            Height2Box.Text = magnet2.height.ToString();
             Painting();
         }
 
@@ -124,6 +132,24 @@ namespace TriangleDeloneWithMagnetic
             ScrollHeight.Value = (int)magnet2.center.Y;
             ScrollWidth.Value = (int)magnet2.center.X;
             ScrollAngle.Value = (int)(magnet2.angle * 360 / 2 / Math.PI);
+        }
+
+        private void UpdateBtn_Click(object sender, EventArgs e)
+        {
+            list_triangles.Clear();
+            step_x = (float)double.Parse(StepXBox.Text);
+            step_y = (float)double.Parse(StepYBox.Text);
+
+            magnet1.width = (float)double.Parse(Width1Box.Text);
+            magnet2.width = (float)double.Parse(Width2Box.Text);
+            magnet1.height = (float)double.Parse(Height1Box.Text);
+            magnet2.height = (float)double.Parse(Height2Box.Text);
+
+            points.Clear();
+            points.AddRange(magnet1.ReturnRectangleDdiscret()); points.AddRange(magnet2.ReturnRectangleDdiscret());
+            points.AddRange(GlobalRect.ReturnRectangleDdiscret());
+
+            Painting();
         }
 
         private void Painting()
