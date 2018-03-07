@@ -21,6 +21,7 @@ namespace TriangleDeloneWithMagnetic
         public List<Triangle> list_triangle;
         List<PointF> GlobalPoints;
         List<PointF> FakePoints;
+        List<PointF> MagnetPoints;
 
         List<PointF> GlobalRectangle;
         Magnet Magnet1;
@@ -34,8 +35,8 @@ namespace TriangleDeloneWithMagnetic
         {
             GlobalPoints = new List<PointF> { p1, p2, p3, p4 };
             GlobalRectangle = new List<PointF>(); GlobalRectangle.AddRange(globRect);
-            Magnet1 = magnet1; 
-            Magnet2 = magnet2; 
+            Magnet1 = magnet1;
+            Magnet2 = magnet2;
             FakePoints = new List<PointF>(); FakePoints.AddRange(Magnet1.FakePoints()); FakePoints.AddRange(Magnet2.FakePoints());
 
             points.AddRange(FakePoints);
@@ -43,6 +44,11 @@ namespace TriangleDeloneWithMagnetic
             points.AddRange(GlobalRectangle);
             points.AddRange(Magnet1.ReturnRectangleDdiscret());
             points.AddRange(Magnet2.ReturnRectangleDdiscret());
+
+
+            MagnetPoints = new List<PointF>();
+            MagnetPoints.AddRange(Magnet1.ReturnRectangleDdiscret());
+            MagnetPoints.AddRange(Magnet2.ReturnRectangleDdiscret());
         }
 
         private ParametrsEllipse SearchEllipse(Triangle triangle)
@@ -109,7 +115,7 @@ namespace TriangleDeloneWithMagnetic
             return list_triangle;
         }
 
-        public bool IsInMagnets (PointF point)
+        public bool IsInMagnets(PointF point)
         {
             Triangle magnet11 = new Triangle
             {
@@ -169,29 +175,43 @@ namespace TriangleDeloneWithMagnetic
                     numDeleting = 0;
                     foreach (Triangle triangle in list_triangle)
                     {
-                        ParametrsEllipse param = new ParametrsEllipse();
-                        param = SearchEllipse(triangle);
-
-                        float distance = (float)Math.Sqrt((point.X - param.center.X) * (point.X - param.center.X) +
-                                       (point.Y - param.center.Y) * (point.Y - param.center.Y));
-                        if (distance < param.R)
+                        bool IsInMagnet = false;
+                        foreach (PointF bufPoint in FakePoints)
                         {
-                            bool new1 = true, new2 = true, new3 = true;
-                            foreach (PointF bufPoint in newPoints)
+                            if ((triangle.point1 == bufPoint)
+                                   || (triangle.point2 == bufPoint)
+                                   || (triangle.point3 == bufPoint)) { IsInMagnet = true; break; }
+                        }
+                        if (!IsInMagnet)
+                        {
+                            ParametrsEllipse param = new ParametrsEllipse();
+                            param = SearchEllipse(triangle);
+
+                            float distance = (float)Math.Sqrt((point.X - param.center.X) * (point.X - param.center.X) +
+                                           (point.Y - param.center.Y) * (point.Y - param.center.Y));
+                            if (distance < param.R)
                             {
-                                if (triangle.point1 == bufPoint) new1 = false;
-                                if (triangle.point2 == bufPoint) new2 = false;
-                                if (triangle.point3 == bufPoint) new3 = false;
+                                bool new1 = true, new2 = true, new3 = true;
+                                foreach (PointF bufPoint in newPoints)
+                                {
+                                    if (triangle.point1 == bufPoint) new1 = false;
+                                    if (triangle.point2 == bufPoint) new2 = false;
+                                    if (triangle.point3 == bufPoint) new3 = false;
+                                }
+
+
+                                if (new1) newPoints.Add(triangle.point1);
+                                if (new2) newPoints.Add(triangle.point2);
+                                if (new3) newPoints.Add(triangle.point3);
+                                detected = true;
+
+                                break;
                             }
-                            if (new1) newPoints.Add(triangle.point1);
-                            if (new2) newPoints.Add(triangle.point2);
-                            if (new3) newPoints.Add(triangle.point3);
-                            detected = true;
-                            break;
                         }
                         numDeleting++;
                     }
                     if (detected) list_triangle.RemoveAt(numDeleting);
+
                 }
 
                 List<Triangle> buffer_list2 = new List<Triangle>();
@@ -243,7 +263,7 @@ namespace TriangleDeloneWithMagnetic
                     {
                         isOk = false; break;
                     }
-                }                
+                }
 
                 if (isOk) buftriangles.Add(triangle);
             }
