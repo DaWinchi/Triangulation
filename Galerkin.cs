@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TriangleDeloneWithMagnetic
 {
-    public struct Piramide { List<Triangle> base_triangles; PointF vertex; float value; }
+    public struct Piramide { List<Triangle> base_triangles; PointF vertex; float z; double volume; }
     public class Galerkin
     {
         public List<Piramide> piramides;
@@ -22,11 +22,17 @@ namespace TriangleDeloneWithMagnetic
             points.AddRange(p_points);
 
             piramides = new List<Piramide>();
-            
+                       
         }
 
 
-        private 
+        private double VolumePiramide(Piramide piramide)
+        {
+
+            return 0;
+        }
+
+       
             
     }
 }
