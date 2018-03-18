@@ -224,7 +224,7 @@ namespace TriangleDeloneWithMagnetic
                     numDeleting = 0;
                     foreach (Triangle triangle in buffer_list2)
                     {
-                        if (!((triangle.point1 == point) || (triangle.point1 == point) || (triangle.point1 == point)))
+                        if (!((triangle.point1 == point) || (triangle.point2 == point) || (triangle.point3 == point)))
                         {
                             detected = true;
                             break;
