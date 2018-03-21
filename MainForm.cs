@@ -218,7 +218,15 @@ namespace TriangleDeloneWithMagnetic
                 y_now += step_y;
                 if (y_now > GlobalRect.C.Y - step_y / 2)
                 {
-                    timer1.Stop(); list_triangles.Clear(); list_triangles.AddRange(triangulation.SortTriangle()); Painting();
+                    timer1.Stop(); list_triangles.Clear();
+                    list_triangles.AddRange(triangulation.SortTriangle());
+                    Painting();
+                    Galerkin galerkin = new Galerkin(list_triangles,
+                                                    points,
+                                                    GlobalRect.ReturnRectangleDdiscret(),
+                                                    magnet1.ReturnRectangleDdiscret(),
+                                                    magnet2.ReturnRectangleDdiscret());
+                    galerkin.CreateMatrixA();
                 }
                 x_now = GlobalRect.A.X;
             }
@@ -227,6 +235,7 @@ namespace TriangleDeloneWithMagnetic
             PointF point = new PointF(x_now + (float)rand.NextDouble() / 100, y_now + (float)rand.NextDouble() / 100);
             list_triangles.Clear();
             list_triangles.AddRange(triangulation.AddPoint(point));
+            points.Add(point);
             x_now += step_x;
             Painting();
 

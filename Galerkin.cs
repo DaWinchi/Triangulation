@@ -93,9 +93,9 @@ namespace TriangleDeloneWithMagnetic
         private void InitializePiramides(List<Triangle> p_triangles, List<PointF> p_points)
         {
             triangles.AddRange(p_triangles);
-            points.AddRange(p_points);
+            all_points.AddRange(p_points);
 
-            foreach (PointF point in points)
+            foreach (PointF point in all_points)
             {
                 Piramide piramide = new Piramide();
                 piramide.base_triangles = new List<Triangle>();
@@ -111,7 +111,7 @@ namespace TriangleDeloneWithMagnetic
             }
         }
 
-        private void CreateMatrixA()
+        public void CreateMatrixA()
         {
             for (int i = 0; i < all_points.Count; i++)
             {
@@ -130,10 +130,43 @@ namespace TriangleDeloneWithMagnetic
                                 tempTringles.Add(triangle);
                         }
 
+                        foreach(Triangle triangle in tempTringles)
+                        {
+                            value += SquareTriangle(triangle) *
+                                (DpDx(triangle, all_points[j]) * DpDx(triangle, all_points[j]) +
+                                DpDy(triangle, all_points[j]) * DpDy(triangle, all_points[j]));
+                        }
+                        list_a.Add(value);
+                    }
+                    else if (i!=j)
+                    {
+                        List<Triangle> tempTringles = new List<Triangle>();
+                        foreach (Triangle triangle in triangles)
+                        {
+                            if ((triangle.point1 == all_points[i]&&triangle.point2 == all_points[j]) ||
+                                (triangle.point1 == all_points[i]&& triangle.point3 == all_points[j]) ||
+                                (triangle.point2 == all_points[i]&& triangle.point1 == all_points[j])||
+                                (triangle.point2 == all_points[i] && triangle.point3 == all_points[j])||
+                                (triangle.point3 == all_points[i] && triangle.point1 == all_points[j]) ||
+                                (triangle.point3 == all_points[i] && triangle.point2 == all_points[j]))
+                                tempTringles.Add(triangle);
+                        }
 
+                        if (tempTringles.Count == 0) { value = 0; list_a.Add(value); }
+                        else
+                        {
+                            foreach(Triangle triangle in tempTringles)
+                            {
+                                value += SquareTriangle(triangle) *
+                                    (DpDx(triangle, all_points[i]) * DpDx(triangle, all_points[j]) +
+                                    (DpDy(triangle, all_points[i]) * DpDy(triangle, all_points[j])));
 
+                            }
+                            list_a.Add(value);
+                        }
                     }
                 }
+                A.Add(list_a);
             }
         }
 
