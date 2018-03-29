@@ -67,6 +67,9 @@ namespace TriangleDeloneWithMagnetic
         Graphics graph;
 
         List<PointF> points;
+
+        List<Potential> unknownPotential;
+
         List<Potential> magnet1Potential;
         List<Potential> magnet2Potential;
         List<Potential> RectPotential;

@@ -19,14 +19,15 @@ namespace TriangleDeloneWithMagnetic
         private List<Triangle> triangles;
 
         private List<PointF> all_points;
+        private List<PointF> searching_points;
         private List<PointF> rect_points;
         private List<PointF> magnet1_points;
         private List<PointF> magnet2_points;
 
-        public List<Potential> potential;
-        public List<Potential> magnet1Potenrial;
-        public List<Potential> magnet2Potenrial;
-        public List<Potential> rectPotenrial;
+        public List<Potential> unknownPotential;
+        public List<Potential> magnet1Potential;
+        public List<Potential> magnet2Potential;
+        public List<Potential> rectPotential;
 
         private List<List<float>> A;
         private List<float> B;
@@ -34,7 +35,11 @@ namespace TriangleDeloneWithMagnetic
                            List<PointF> p_allpoints,
                            List<PointF> p_rectpoints,
                            List<PointF> p_magnet1,
-                           List<PointF> p_magnet2)
+                           List<PointF> p_magnet2,
+                           List<Potential> p_magnet1Potential,
+                           List<Potential> p_magnet2Potential,
+                           List<Potential> p_rectPotential,
+                           List<Potential> p_unknownPotential)
         {
             triangles = new List<Triangle>();
             triangles.AddRange(p_triangle);
@@ -48,8 +53,19 @@ namespace TriangleDeloneWithMagnetic
             magnet2_points.AddRange(p_magnet2);
 
             piramides = new List<Piramide>();
-            potential = new List<Potential>();
+
+            unknownPotential = new List<Potential>();
+            magnet1Potential = new List<Potential>();
+            magnet2Potential = new List<Potential>();
+            rectPotential = new List<Potential>();
+
+            magnet1Potential.AddRange(p_magnet1Potential);
+            magnet2Potential.AddRange(p_magnet1Potential);
+            rectPotential.AddRange(p_rectPotential);
+            unknownPotential.AddRange(p_unknownPotential);
+
             A = new List<List<float>>();
+            B = new List<float>();
 
         }
 
@@ -65,7 +81,7 @@ namespace TriangleDeloneWithMagnetic
 
         private float DpDx(Triangle triangle, PointF vertex)
         {
-            PointF point1=vertex, point2=vertex, point3=vertex; //просто начальная инициализация
+            PointF point1 = vertex, point2 = vertex, point3 = vertex; //просто начальная инициализация
             if (triangle.point1 == vertex) { point1 = vertex; point2 = triangle.point2; point3 = triangle.point3; }
             if (triangle.point2 == vertex) { point1 = vertex; point2 = triangle.point1; point3 = triangle.point3; }
             if (triangle.point3 == vertex) { point1 = vertex; point2 = triangle.point2; point3 = triangle.point1; }
@@ -120,10 +136,10 @@ namespace TriangleDeloneWithMagnetic
 
         public void CreateMatrixA()
         {
-            for (int i = 0; i < all_points.Count; i++)
+            for (int i = 0; i < unknownPotential.Count; i++)
             {
                 List<float> list_a = new List<float>();
-                for (int j = 0; j < all_points.Count; j++)
+                for (int j = 0; j < unknownPotential.Count; j++)
                 {
                     float value = 0;
                     if (i == j)
@@ -131,38 +147,39 @@ namespace TriangleDeloneWithMagnetic
                         List<Triangle> tempTringles = new List<Triangle>();
                         foreach (Triangle triangle in triangles)
                         {
-                            if (triangle.point1 == all_points[i] ||
-                                triangle.point2 == all_points[i] ||
-                                triangle.point3 == all_points[i])
+                            if (triangle.point1 == unknownPotential[i].point ||
+                                triangle.point2 == unknownPotential[i].point ||
+                                triangle.point3 == unknownPotential[i].point)
                                 tempTringles.Add(triangle);
                         }
 
-                        foreach(Triangle triangle in tempTringles)
+                        foreach (Triangle triangle in tempTringles)
                         {
                             value += SquareTriangle(triangle) *
-                                (DpDx(triangle, all_points[j]) * DpDx(triangle, all_points[j]) +
-                                DpDy(triangle, all_points[j]) * DpDy(triangle, all_points[j]));
+                                (DpDx(triangle, unknownPotential[i].point) * DpDx(triangle, unknownPotential[i].point) +
+                                DpDy(triangle, unknownPotential[i].point) * DpDy(triangle, unknownPotential[i].point));
                         }
                         list_a.Add(value);
                     }
-                    else if (i!=j)
+                    else if (i != j)
                     {
                         List<Triangle> tempTringles = new List<Triangle>();
                         foreach (Triangle triangle in triangles)
                         {
-                            if ((triangle.point1 == all_points[i]&&triangle.point2 == all_points[j]) ||
-                                (triangle.point1 == all_points[i]&& triangle.point3 == all_points[j]) ||
-                                (triangle.point2 == all_points[i]&& triangle.point1 == all_points[j])||
-                                (triangle.point2 == all_points[i] && triangle.point3 == all_points[j])||
-                                (triangle.point3 == all_points[i] && triangle.point1 == all_points[j]) ||
-                                (triangle.point3 == all_points[i] && triangle.point2 == all_points[j]))
+                            PointF pi = unknownPotential[i].point, pj = unknownPotential[j].point;
+                            if ((triangle.point1 == pi && triangle.point2 == pj) ||
+                                (triangle.point1 == pi && triangle.point3 == pj) ||
+                                (triangle.point2 == pi && triangle.point1 == pj) ||
+                                (triangle.point2 == pi && triangle.point3 == pj) ||
+                                (triangle.point3 == pi && triangle.point1 == pj) ||
+                                (triangle.point3 == pi && triangle.point2 == pj))
                                 tempTringles.Add(triangle);
                         }
 
                         if (tempTringles.Count == 0) { value = 0; list_a.Add(value); }
                         else
                         {
-                            foreach(Triangle triangle in tempTringles)
+                            foreach (Triangle triangle in tempTringles)
                             {
                                 value += SquareTriangle(triangle) *
                                     (DpDx(triangle, all_points[i]) * DpDx(triangle, all_points[j]) +
@@ -178,7 +195,43 @@ namespace TriangleDeloneWithMagnetic
         }
         public void CreateB()
         {
+            List<Potential> boardPotential = new List<Potential>();
+            boardPotential.AddRange(magnet1Potential);
+            boardPotential.AddRange(magnet2Potential);
+            boardPotential.AddRange(rectPotential);
+            for (int i = 0; i < unknownPotential.Count; i++)
+            {
+                float value = 0;
+                for (int j = 0; j < boardPotential.Count; j++)
+                {
 
+                    List<Triangle> tempTringles = new List<Triangle>();
+                    foreach (Triangle triangle in triangles)
+                    {
+                        PointF pi = unknownPotential[i].point, pj = boardPotential[j].point;
+                        if ((triangle.point1 == pi && triangle.point2 == pj) ||
+                            (triangle.point1 == pi && triangle.point3 == pj) ||
+                            (triangle.point2 == pi && triangle.point1 == pj) ||
+                            (triangle.point2 == pi && triangle.point3 == pj) ||
+                            (triangle.point3 == pi && triangle.point1 == pj) ||
+                            (triangle.point3 == pi && triangle.point2 == pj))
+                            tempTringles.Add(triangle);
+                    }
+
+                    if (tempTringles.Count == 0) { value -= 0;}
+                    else
+                    {
+                        foreach (Triangle triangle in tempTringles)
+                        {
+                            value -= boardPotential[j].value *
+                                (DpDx(triangle, boardPotential[j].point) * DpDx(triangle, unknownPotential[i].point) +
+                                DpDy(triangle, boardPotential[j].point) * DpDy(triangle, unknownPotential[i].point));
+                        }
+                    }
+
+                }
+                B.Add(value);
+            }
         }
     }
 }
