@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,6 +32,7 @@ namespace TriangleDeloneWithMagnetic
 
         private List<List<float>> A;
         private List<float> B;
+        private List<float> C;
         public Galerkin(List<Triangle> p_triangle,
                            List<PointF> p_allpoints,
                            List<PointF> p_rectpoints,
@@ -66,6 +68,7 @@ namespace TriangleDeloneWithMagnetic
 
             A = new List<List<float>>();
             B = new List<float>();
+            C = new List<float>();
 
         }
 
@@ -136,6 +139,7 @@ namespace TriangleDeloneWithMagnetic
 
         public void CreateMatrixA()
         {
+            A.Clear();
             for (int i = 0; i < unknownPotential.Count; i++)
             {
                 List<float> list_a = new List<float>();
@@ -195,6 +199,7 @@ namespace TriangleDeloneWithMagnetic
         }
         public void CreateB()
         {
+            B.Clear();
             List<Potential> boardPotential = new List<Potential>();
             boardPotential.AddRange(magnet1Potential);
             boardPotential.AddRange(magnet2Potential);
@@ -217,12 +222,12 @@ namespace TriangleDeloneWithMagnetic
                             tempTringles.Add(triangle);
                     }
 
-                    if (tempTringles.Count == 0) { value -= 0;}
+                    if (tempTringles.Count == 0) { value -= 0; }
                     else
                     {
                         foreach (Triangle triangle in tempTringles)
                         {
-                            value -= boardPotential[j].value *SquareTriangle(triangle)*
+                            value -= boardPotential[j].value * SquareTriangle(triangle) *
                                 (DpDx(triangle, boardPotential[j].point) * DpDx(triangle, unknownPotential[i].point) +
                                 DpDy(triangle, boardPotential[j].point) * DpDy(triangle, unknownPotential[i].point));
                         }
@@ -232,5 +237,68 @@ namespace TriangleDeloneWithMagnetic
                 B.Add(value);
             }
         }
+        public List<float> MethodKachmarzh(float[] a, float[] b, int nn, int ny)
+        {
+            /* матрица А, столбец свободных членов, массив неизвестных,
+            nn - количество неизвестных;  ny - количество уравнений*/
+            float[] x = new float[nn];
+            float eps = 1e-6f;
+            //float s;
+            int i, j, k;
+            float s1, s2, fa1, t;
+            float[] x1 = new float[nn];
+
+            x[0] = 0.5f;
+            for (i = 1; i < nn; i++) x[i] = 0f;
+
+            s1 = s2 = 1f;
+            while (s1 > eps * s2)
+            {
+                for (i = 0; i < nn; i++) x1[i] = x[i];
+
+                for (i = 0; i < ny; i++)
+                {
+                    s1 = 0f;
+                    s2 = 0f;
+                    for (j = 0; j < nn; j++)
+                    {
+                        fa1 = a[i * nn + j];
+                        s1 += fa1 * x[j];
+                        s2 += fa1 * fa1;
+                    }
+                    t = (b[i] - s1) / s2;
+                    for (k = 0; k < nn; k++) x[k] += a[i * nn + k] * t;
+                }
+
+                s1 = 0f;
+                s2 = 0f;
+                for (i = 0; i < nn; i++)
+                {
+                    s1 += (x[i] - x1[i]) * (x[i] - x1[i]);
+                    s2 += x[i] * x[i];
+                }
+                s1 = (float)Math.Sqrt(s1);
+                s2 = (float)Math.Sqrt(s2);
+            }
+            return x.ToList();
+        }
+        public void CalculatePotential()
+        {
+            CreateMatrixA();
+            CreateB();
+            C.Clear();
+            List<float> buf = new List<float>();
+            float[] a = new float[A.Count * A.Count];
+            float[] b = new float[B.Count];
+            for (int i = 0; i < A.Count; i++)
+            {
+                buf.AddRange(A[i]);
+            }
+            a = buf.ToArray();
+            b = B.ToArray();
+            C.AddRange(MethodKachmarzh(a, b, B.Count, B.Count));
+
+        }
+
     }
 }
