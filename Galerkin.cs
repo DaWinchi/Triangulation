@@ -60,7 +60,7 @@ namespace TriangleDeloneWithMagnetic
             rectPotential = new List<Potential>();
 
             magnet1Potential.AddRange(p_magnet1Potential);
-            magnet2Potential.AddRange(p_magnet1Potential);
+            magnet2Potential.AddRange(p_magnet2Potential);
             rectPotential.AddRange(p_rectPotential);
             unknownPotential.AddRange(p_unknownPotential);
 
@@ -182,8 +182,8 @@ namespace TriangleDeloneWithMagnetic
                             foreach (Triangle triangle in tempTringles)
                             {
                                 value += SquareTriangle(triangle) *
-                                    (DpDx(triangle, all_points[i]) * DpDx(triangle, all_points[j]) +
-                                    (DpDy(triangle, all_points[i]) * DpDy(triangle, all_points[j])));
+                                    (DpDx(triangle, unknownPotential[i].point) * DpDx(triangle, unknownPotential[j].point) +
+                                    (DpDy(triangle, unknownPotential[i].point) * DpDy(triangle, unknownPotential[j].point)));
 
                             }
                             list_a.Add(value);
@@ -204,7 +204,6 @@ namespace TriangleDeloneWithMagnetic
                 float value = 0;
                 for (int j = 0; j < boardPotential.Count; j++)
                 {
-
                     List<Triangle> tempTringles = new List<Triangle>();
                     foreach (Triangle triangle in triangles)
                     {
@@ -223,7 +222,7 @@ namespace TriangleDeloneWithMagnetic
                     {
                         foreach (Triangle triangle in tempTringles)
                         {
-                            value -= boardPotential[j].value *
+                            value -= boardPotential[j].value *SquareTriangle(triangle)*
                                 (DpDx(triangle, boardPotential[j].point) * DpDx(triangle, unknownPotential[i].point) +
                                 DpDy(triangle, boardPotential[j].point) * DpDy(triangle, unknownPotential[i].point));
                         }

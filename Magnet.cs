@@ -15,8 +15,8 @@ namespace TriangleDeloneWithMagnetic
         public float step;
         public PointF A, B, C, D;
 
-        List<PointF> points;
-        List<Potential> potential;
+        public List<PointF> points;
+        public List<Potential> potential;
         public Magnet(float p_width, float p_height, PointF p_center, float p_angle, float p_step)
         {
             points = new List<PointF>();
@@ -86,15 +86,36 @@ namespace TriangleDeloneWithMagnetic
                     potential.Add(pot);
                 }
             }
+            points.Clear();
+            foreach(Potential pot in potential)
+            {
+                points.Add(pot.point);
+            }
+
+            PointF newPoint1 = new PointF((float)(A.X * Math.Cos(angle) - A.Y * Math.Sin(angle)),
+                                       (float)(A.X * Math.Sin(angle) + A.Y * Math.Cos(angle)));
+            A = newPoint1;
+
+            PointF newPoint2 = new PointF((float)(B.X * Math.Cos(angle) - B.Y * Math.Sin(angle)),
+                                        (float)(B.X * Math.Sin(angle) + B.Y * Math.Cos(angle)));
+            B = newPoint2;
+            PointF newPoint3 = new PointF((float)(C.X * Math.Cos(angle) - C.Y * Math.Sin(angle)),
+                                        (float)(C.X * Math.Sin(angle) + C.Y * Math.Cos(angle)));
+            C = newPoint3;
+            PointF newPoint4 = new PointF((float)(D.X * Math.Cos(angle) - D.Y * Math.Sin(angle)),
+                                        (float)(D.X * Math.Sin(angle) + D.Y * Math.Cos(angle)));
+            D = newPoint4;
+
             return potential;
         }
         public List< PointF> FakePoints()
         {
 
-            Magnet magnet = new Magnet(width - width / 5, height - height / 5, center, angle, step/3);
+            Magnet magnet = new Magnet(width - width / 5, height - height / 5, center, angle, step/2);
 
             List<PointF> bufPoints = new List<PointF>();
-            bufPoints = magnet.ReturnRectangleDdiscret();
+            magnet.ReturnPotential(0,0);
+            bufPoints = magnet.points;
            
 
             return bufPoints;
@@ -114,28 +135,10 @@ namespace TriangleDeloneWithMagnetic
             }
 
 
-            PointF newPoint1 = new PointF((float)(A.X * Math.Cos(angle) - A.Y * Math.Sin(angle)),
-                                        (float)(A.X * Math.Sin(angle) + A.Y * Math.Cos(angle)));
-            A = newPoint1;
-
-            PointF newPoint2 = new PointF((float)(B.X * Math.Cos(angle) - B.Y * Math.Sin(angle)),
-                                        (float)(B.X * Math.Sin(angle) + B.Y * Math.Cos(angle)));
-            B = newPoint2;
-            PointF newPoint3 = new PointF((float)(C.X * Math.Cos(angle) - C.Y * Math.Sin(angle)),
-                                        (float)(C.X * Math.Sin(angle) + C.Y * Math.Cos(angle)));
-            C = newPoint3;
-            PointF newPoint4 = new PointF((float)(D.X * Math.Cos(angle) - D.Y * Math.Sin(angle)),
-                                        (float)(D.X * Math.Sin(angle) + D.Y * Math.Cos(angle)));
-            D = newPoint4;
+           
         }
 
-        public List<PointF> ReturnRectangleDdiscret()
-        {
-            CreateDiscret();
-            RotateCoordinate();
-            return points;
-        }
-
+       
 
     }
 }

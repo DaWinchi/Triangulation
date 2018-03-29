@@ -28,15 +28,14 @@ namespace TriangleDeloneWithMagnetic
             magnet1Potential = new List<Potential>();
             magnet2Potential = new List<Potential>();
             RectPotential = new List<Potential>();
+            unknownPotential = new List<Potential>();
 
             magnet1 = new Magnet(40, 20, center1, (float)(2 * Math.PI / 360 * 45), step_x);
             magnet2 = new Magnet(40, 20, center2, (float)(2 * Math.PI / 360 * 30), step_x);
             GlobalRect = new Magnet(160, 160, centerGlobal, (float)(2 * Math.PI / 360 * 0), 20);
-            points.AddRange(magnet1.ReturnRectangleDdiscret());
-            points.AddRange(magnet2.ReturnRectangleDdiscret());
-            points.AddRange(GlobalRect.ReturnRectangleDdiscret());
+            
 
-            magnet1Potential = magnet1.ReturnPotential(-10, 10);
+            magnet1Potential = magnet1.ReturnPotential(-10,10);
             magnet2Potential = magnet2.ReturnPotential(-10, 10);
             RectPotential = GlobalRect.ReturnPotential(0, 0);
 
@@ -165,6 +164,8 @@ namespace TriangleDeloneWithMagnetic
             magnet2Potential.Clear();
             RectPotential.Clear();
 
+
+
             magnet1Potential = magnet1.ReturnPotential(-10, 10);
             magnet2Potential = magnet2.ReturnPotential(-10, 10);
             RectPotential = GlobalRect.ReturnPotential(0, 0);
@@ -246,8 +247,6 @@ namespace TriangleDeloneWithMagnetic
             magnet2.height = (float)double.Parse(Height2Box.Text);
 
             points.Clear();
-            points.AddRange(magnet1.ReturnRectangleDdiscret()); points.AddRange(magnet2.ReturnRectangleDdiscret());
-            points.AddRange(GlobalRect.ReturnRectangleDdiscret());
 
             magnet1Potential.Clear();
             magnet2Potential.Clear();
@@ -270,7 +269,7 @@ namespace TriangleDeloneWithMagnetic
             PointF point3 = new PointF(0, 300); PointF point4 = new PointF(0, -300);
 
             triangulation.AddGlobalPoints(point1, point2, point3, point4,
-                                           GlobalRect.ReturnRectangleDdiscret(),
+                                           GlobalRect.points,
                                            magnet1,
                                            magnet2);
             list_triangles.AddRange(triangulation.ReturnAllTriangles(triangulation.points));
@@ -279,7 +278,7 @@ namespace TriangleDeloneWithMagnetic
             x_now = GlobalRect.A.X + step_x;
             y_now = GlobalRect.A.Y + step_y;
 
-            timer1.Start();
+           timer1.Start();
             Painting();
         }
 
@@ -290,15 +289,21 @@ namespace TriangleDeloneWithMagnetic
                 y_now += step_y;
                 if (y_now > GlobalRect.C.Y - step_y / 2)
                 {
-                    timer1.Stop(); list_triangles.Clear();
+                    timer1.Stop();
+                    list_triangles.Clear();
                     list_triangles.AddRange(triangulation.SortTriangle());
                     Painting();
                     Galerkin galerkin = new Galerkin(list_triangles,
                                                     points,
-                                                    GlobalRect.ReturnRectangleDdiscret(),
-                                                    magnet1.ReturnRectangleDdiscret(),
-                                                    magnet2.ReturnRectangleDdiscret());
-                    //galerkin.CreateMatrixA();
+                                                    GlobalRect.points,
+                                                    magnet1.points,
+                                                    magnet2.points,
+                                                    magnet1Potential,
+                                                    magnet2Potential,
+                                                    RectPotential,
+                                                    unknownPotential);
+                    galerkin.CreateMatrixA();
+                    galerkin.CreateB();
                 }
                 x_now = GlobalRect.A.X;
             }
@@ -307,6 +312,10 @@ namespace TriangleDeloneWithMagnetic
             PointF point = new PointF(x_now + (float)rand.NextDouble() / 100, y_now + (float)rand.NextDouble() / 100);
             list_triangles.Clear();
             list_triangles.AddRange(triangulation.AddPoint(point));
+
+            Potential pot = new Potential { point = point, value = 0 };
+            unknownPotential.Add(pot);
+
             points.Add(point);
             x_now += step_x;
             Painting();

@@ -34,21 +34,24 @@ namespace TriangleDeloneWithMagnetic
                      Magnet magnet2)
         {
             GlobalPoints = new List<PointF> { p1, p2, p3, p4 };
-            GlobalRectangle = new List<PointF>(); GlobalRectangle.AddRange(globRect);
+            GlobalRectangle = new List<PointF>();
+            GlobalRectangle.AddRange(globRect);
             Magnet1 = magnet1;
             Magnet2 = magnet2;
-            FakePoints = new List<PointF>(); FakePoints.AddRange(Magnet1.FakePoints()); FakePoints.AddRange(Magnet2.FakePoints());
+            FakePoints = new List<PointF>();
+            FakePoints.AddRange(Magnet1.FakePoints());
+            FakePoints.AddRange(Magnet2.FakePoints());
 
             points.AddRange(FakePoints);
             points.AddRange(GlobalPoints);
             points.AddRange(GlobalRectangle);
-            points.AddRange(Magnet1.ReturnRectangleDdiscret());
-            points.AddRange(Magnet2.ReturnRectangleDdiscret());
+            points.AddRange(Magnet1.points);
+            points.AddRange(Magnet2.points);
 
 
             MagnetPoints = new List<PointF>();
-            MagnetPoints.AddRange(Magnet1.ReturnRectangleDdiscret());
-            MagnetPoints.AddRange(Magnet2.ReturnRectangleDdiscret());
+            MagnetPoints.AddRange(Magnet1.points);
+            MagnetPoints.AddRange(Magnet2.points);
         }
 
         private ParametrsEllipse SearchEllipse(Triangle triangle)
@@ -58,18 +61,28 @@ namespace TriangleDeloneWithMagnetic
             PointF point2 = triangle.point2;
             PointF point3 = triangle.point3;
 
-            param.center.X = (float)(((point2.X * point2.X - point1.X * point1.X + point2.Y * point2.Y - point1.Y * point1.Y) * (point3.Y - point1.Y) -
-              (point3.X * point3.X - point1.X * point1.X + point3.Y * point3.Y - point1.Y * point1.Y) * (point2.Y - point1.Y))
-              / (2 * ((point2.X - point1.X) * (point3.Y - point1.Y) - (point3.X - point1.X) * (point2.Y - point1.Y))));
+            if ((triangle.point1.X == triangle.point2.X && triangle.point2.X == triangle.point3.X ||
+                   triangle.point1.Y == triangle.point2.Y && triangle.point2.Y == triangle.point3.Y)||
+                   (triangle.point1==triangle.point2|| triangle.point1 == triangle.point3|| triangle.point3 == triangle.point2))
+            {
+                param.center.X = 1e+6f;
+                param.center.Y = 1e+6f;
+                param.R = 1e+6f;
+            }
+            else
+            {
+                param.center.X = (float)(((point2.X * point2.X - point1.X * point1.X + point2.Y * point2.Y - point1.Y * point1.Y) * (point3.Y - point1.Y) -
+                  (point3.X * point3.X - point1.X * point1.X + point3.Y * point3.Y - point1.Y * point1.Y) * (point2.Y - point1.Y))
+                  / (2 * ((point2.X - point1.X) * (point3.Y - point1.Y) - (point3.X - point1.X) * (point2.Y - point1.Y))));
 
 
-            param.center.Y = (float)(((point3.X * point3.X - point1.X * point1.X + point3.Y * point3.Y - point1.Y * point1.Y) * (point2.X - point1.X) -
-                (point2.X * point2.X - point1.X * point1.X + point2.Y * point2.Y - point1.Y * point1.Y) * (point3.X - point1.X))
-                / (2 * ((point2.X - point1.X) * (point3.Y - point1.Y) - (point3.X - point1.X) * (point2.Y - point1.Y))));
+                param.center.Y = (float)(((point3.X * point3.X - point1.X * point1.X + point3.Y * point3.Y - point1.Y * point1.Y) * (point2.X - point1.X) -
+                    (point2.X * point2.X - point1.X * point1.X + point2.Y * point2.Y - point1.Y * point1.Y) * (point3.X - point1.X))
+                    / (2 * ((point2.X - point1.X) * (point3.Y - point1.Y) - (point3.X - point1.X) * (point2.Y - point1.Y))));
 
-            param.R = Math.Sqrt((param.center.X - point1.X) * (param.center.X - point1.X) + (param.center.Y - point1.Y) * (param.center.Y - point1.Y));
+                param.R = Math.Sqrt((param.center.X - point1.X) * (param.center.X - point1.X) + (param.center.Y - point1.Y) * (param.center.Y - point1.Y));
 
-
+            }
             return param;
         }
 
@@ -189,7 +202,7 @@ namespace TriangleDeloneWithMagnetic
 
                             float distance = (float)Math.Sqrt((point.X - param.center.X) * (point.X - param.center.X) +
                                            (point.Y - param.center.Y) * (point.Y - param.center.Y));
-                            if (distance < param.R)
+                            if (distance < param.R && param.R < 1e+6)
                             {
                                 bool new1 = true, new2 = true, new3 = true;
                                 foreach (PointF bufPoint in newPoints)
@@ -264,6 +277,7 @@ namespace TriangleDeloneWithMagnetic
                         isOk = false; break;
                     }
                 }
+               
 
                 //for(int i=0;i<MagnetPoints.Count; i++)
                 //{
