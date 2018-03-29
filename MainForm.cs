@@ -52,8 +52,8 @@ namespace TriangleDeloneWithMagnetic
             ScrollAngle.Maximum = 360;
             ScrollAngle.Value = 45;
 
-            StepXBox.Text = "7";
-            StepYBox.Text = "7";
+            StepXBox.Text = "10";
+            StepYBox.Text = "10";
 
             Width1Box.Text = magnet1.width.ToString();
             Width2Box.Text = magnet2.width.ToString();

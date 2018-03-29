@@ -265,6 +265,23 @@ namespace TriangleDeloneWithMagnetic
                     }
                 }
 
+                //for(int i=0;i<MagnetPoints.Count; i++)
+                //{
+                //    for (int j = 0; j < MagnetPoints.Count; j++)
+                //    {
+                //        for (int k = 0; k < MagnetPoints.Count; k++)
+                //        {
+                //            if (i == k || i == j || k == j) continue;
+                //            if ((triangle.point1 == MagnetPoints[i])
+                //        && (triangle.point2 == MagnetPoints[j])
+                //        && (triangle.point3 == MagnetPoints[k]))
+                //            {
+                //                isOk = false; break;
+                //            }
+                //        }
+                //    }
+                //}
+
                 if (isOk) buftriangles.Add(triangle);
             }
             list_triangle.Clear();

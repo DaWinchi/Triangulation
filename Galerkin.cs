@@ -17,11 +17,17 @@ namespace TriangleDeloneWithMagnetic
     {
         public List<Piramide> piramides;
         private List<Triangle> triangles;
+
         private List<PointF> all_points;
         private List<PointF> rect_points;
         private List<PointF> magnet1_points;
         private List<PointF> magnet2_points;
+
         public List<Potential> potential;
+        public List<Potential> magnet1Potenrial;
+        public List<Potential> magnet2Potenrial;
+        public List<Potential> rectPotenrial;
+
         private List<List<float>> A;
         private List<float> B;
         public Galerkin(List<Triangle> p_triangle,
