@@ -25,11 +25,21 @@ namespace TriangleDeloneWithMagnetic
                 ymin = -100
             };
             points = new List<PointF>();
+            magnet1Potential = new List<Potential>();
+            magnet2Potential = new List<Potential>();
+            RectPotential = new List<Potential>();
+
             magnet1 = new Magnet(40, 20, center1, (float)(2 * Math.PI / 360 * 45), step_x);
             magnet2 = new Magnet(40, 20, center2, (float)(2 * Math.PI / 360 * 30), step_x);
             GlobalRect = new Magnet(160, 160, centerGlobal, (float)(2 * Math.PI / 360 * 0), 20);
-            points.AddRange(magnet1.ReturnRectangleDdiscret()); points.AddRange(magnet2.ReturnRectangleDdiscret());
+            points.AddRange(magnet1.ReturnRectangleDdiscret());
+            points.AddRange(magnet2.ReturnRectangleDdiscret());
             points.AddRange(GlobalRect.ReturnRectangleDdiscret());
+
+            magnet1Potential = magnet1.ReturnPotential(-10, 10);
+            magnet2Potential = magnet2.ReturnPotential(-10, 10);
+            RectPotential = GlobalRect.ReturnPotential(0, 0);
+
             ScrollHeight.Minimum = (int)GlobalRect.A.Y;
             ScrollHeight.Value = (int)magnet1.center.Y;
             ScrollHeight.Maximum = (int)GlobalRect.D.Y;
@@ -40,7 +50,7 @@ namespace TriangleDeloneWithMagnetic
 
             ScrollAngle.Minimum = 0;
             ScrollAngle.Maximum = 360;
-            ScrollAngle.Value=45;
+            ScrollAngle.Value = 45;
 
             StepXBox.Text = "7";
             StepYBox.Text = "7";
@@ -55,8 +65,13 @@ namespace TriangleDeloneWithMagnetic
         Painter parametrs;
         Bitmap bmp;
         Graphics graph;
+
         List<PointF> points;
+        List<Potential> magnet1Potential;
+        List<Potential> magnet2Potential;
+        List<Potential> RectPotential;
         Triangulation triangulation;
+
         Magnet magnet1; PointF center1 = new PointF(0, -50);
         Magnet magnet2; PointF center2 = new PointF(0, 50);
         Magnet GlobalRect; PointF centerGlobal = new PointF(0, 0);
@@ -64,94 +79,6 @@ namespace TriangleDeloneWithMagnetic
         float step_x = 7F, step_y = 7F, x_now, y_now;
 
         List<Triangle> list_triangles = new List<Triangle>();
-
-        private void ScrollHeight_Scroll(object sender, EventArgs e)
-        {
-            int y = ScrollHeight.Value;
-            if (RadioMagnet1.Checked)
-            {
-                magnet1.center.Y = y;
-            }
-
-            if (RadioMagnet2.Checked)
-            {
-                magnet2.center.Y = y;
-            }
-            points.Clear();
-            points.AddRange(magnet1.ReturnRectangleDdiscret()); points.AddRange(magnet2.ReturnRectangleDdiscret());
-            points.AddRange(GlobalRect.ReturnRectangleDdiscret());
-            Painting();
-
-        }
-
-        private void ScrollWidth_Scroll(object sender, EventArgs e)
-        {
-            int x = ScrollWidth.Value;
-            if (RadioMagnet1.Checked)
-            {
-                magnet1.center.X = x;
-            }
-
-            if (RadioMagnet2.Checked)
-            {
-                magnet2.center.X = x;
-            }
-            points.Clear();
-            points.AddRange(magnet1.ReturnRectangleDdiscret()); points.AddRange(magnet2.ReturnRectangleDdiscret());
-            points.AddRange(GlobalRect.ReturnRectangleDdiscret());
-            Painting();
-        }
-
-        private void ScrollAngle_Scroll(object sender, EventArgs e)
-        {
-            float angle = (float)(2 * Math.PI / 360 *ScrollAngle.Value);
-            if (RadioMagnet1.Checked)
-            {
-                magnet1.angle = angle;
-            }
-
-            if (RadioMagnet2.Checked)
-            {
-                magnet2.angle=angle;
-            }
-            points.Clear();
-            points.AddRange(magnet1.ReturnRectangleDdiscret()); points.AddRange(magnet2.ReturnRectangleDdiscret());
-            points.AddRange(GlobalRect.ReturnRectangleDdiscret());
-            Painting();
-        }
-
-        private void RadioMagnet1_CheckedChanged(object sender, EventArgs e)
-        {
-            ScrollHeight.Value = (int)magnet1.center.Y;
-            ScrollWidth.Value = (int)magnet1.center.X;
-            ScrollAngle.Value = (int)(magnet1.angle * 360 / 2 / Math.PI);
-        }
-
-        private void RadioMagnet2_CheckedChanged(object sender, EventArgs e)
-        {
-            ScrollHeight.Value = (int)magnet2.center.Y;
-            ScrollWidth.Value = (int)magnet2.center.X;
-            ScrollAngle.Value = (int)(magnet2.angle * 360 / 2 / Math.PI);
-        }
-
-        private void UpdateBtn_Click(object sender, EventArgs e)
-        {
-            list_triangles.Clear();
-            step_x = (float)double.Parse(StepXBox.Text);
-            step_y = (float)double.Parse(StepYBox.Text);
-
-            magnet1.width = (float)double.Parse(Width1Box.Text);
-            magnet2.width = (float)double.Parse(Width2Box.Text);
-            magnet1.height = (float)double.Parse(Height1Box.Text);
-            magnet2.height = (float)double.Parse(Height2Box.Text);
-
-            points.Clear();
-            points.AddRange(magnet1.ReturnRectangleDdiscret()); points.AddRange(magnet2.ReturnRectangleDdiscret());
-            points.AddRange(GlobalRect.ReturnRectangleDdiscret());
-
-            Painting();
-        }
-
         private void Painting()
         {
             int width = GraphicsBox.Width, height = GraphicsBox.Height;
@@ -162,6 +89,10 @@ namespace TriangleDeloneWithMagnetic
 
             SolidBrush brushBkgrd = new SolidBrush(Color.Black);
             SolidBrush brushPoint = new SolidBrush(Color.Red);
+
+            SolidBrush brushMinPot = new SolidBrush(Color.Blue);
+            SolidBrush brushMaxPot = new SolidBrush(Color.Red);
+            SolidBrush brushNullPot = new SolidBrush(Color.White);
             graph.FillRectangle(brushBkgrd, 0, 0, width, height);
 
 
@@ -180,14 +111,152 @@ namespace TriangleDeloneWithMagnetic
 
             }
 
-            foreach (PointF point in points)
-            {
-                graph.FillRectangle(brushPoint, (float)parametrs.X(width, point.X) - 2, (float)parametrs.Y(height, point.Y) - 2, 4, 4);
+            //foreach (PointF point in points)
+            //{
+            //    graph.FillRectangle(brushPoint, (float)parametrs.X(width, point.X) - 2, (float)parametrs.Y(height, point.Y) - 2, 4, 4);
 
+            //}
+
+            foreach (Potential pot in magnet1Potential)
+            {
+                if (pot.value < 0)
+                    graph.FillRectangle(brushMinPot, (float)parametrs.X(width, pot.point.X) - 2, (float)parametrs.Y(height, pot.point.Y) - 2, 4, 4);
+                else
+                    graph.FillRectangle(brushMaxPot, (float)parametrs.X(width, pot.point.X) - 2, (float)parametrs.Y(height, pot.point.Y) - 2, 4, 4);
+
+            }
+
+            foreach (Potential pot in magnet2Potential)
+            {
+                if (pot.value < 0)
+                    graph.FillRectangle(brushMinPot, (float)parametrs.X(width, pot.point.X) - 2, (float)parametrs.Y(height, pot.point.Y) - 2, 4, 4);
+                else
+                    graph.FillRectangle(brushMaxPot, (float)parametrs.X(width, pot.point.X) - 2, (float)parametrs.Y(height, pot.point.Y) - 2, 4, 4);
+
+            }
+
+            foreach (Potential pot in RectPotential)
+            {
+                
+                    graph.FillRectangle(brushNullPot, (float)parametrs.X(width, pot.point.X) - 2, (float)parametrs.Y(height, pot.point.Y) - 2, 4, 4);
+               
             }
 
             GraphicsBox.Image = bmp;
         }
+
+        #region Обработка событий скроллинга
+        private void ScrollHeight_Scroll(object sender, EventArgs e)
+        {
+            int y = ScrollHeight.Value;
+            if (RadioMagnet1.Checked)
+            {
+                magnet1.center.Y = y;
+            }
+
+            if (RadioMagnet2.Checked)
+            {
+                magnet2.center.Y = y;
+            }
+            magnet1Potential.Clear();
+            magnet2Potential.Clear();
+            RectPotential.Clear();
+
+            magnet1Potential = magnet1.ReturnPotential(-10, 10);
+            magnet2Potential = magnet2.ReturnPotential(-10, 10);
+            RectPotential = GlobalRect.ReturnPotential(0, 0);
+            Painting();
+
+        }
+
+        private void ScrollWidth_Scroll(object sender, EventArgs e)
+        {
+            int x = ScrollWidth.Value;
+            if (RadioMagnet1.Checked)
+            {
+                magnet1.center.X = x;
+            }
+
+            if (RadioMagnet2.Checked)
+            {
+                magnet2.center.X = x;
+            }
+            magnet1Potential.Clear();
+            magnet2Potential.Clear();
+            RectPotential.Clear();
+
+            magnet1Potential = magnet1.ReturnPotential(-10, 10);
+            magnet2Potential = magnet2.ReturnPotential(-10, 10);
+            RectPotential = GlobalRect.ReturnPotential(0, 0);
+            Painting();
+        }
+
+        private void ScrollAngle_Scroll(object sender, EventArgs e)
+        {
+            float angle = (float)(2 * Math.PI / 360 * ScrollAngle.Value);
+            if (RadioMagnet1.Checked)
+            {
+                magnet1.angle = angle;
+            }
+
+            if (RadioMagnet2.Checked)
+            {
+                magnet2.angle = angle;
+            }
+            magnet1Potential.Clear();
+            magnet2Potential.Clear();
+            RectPotential.Clear();
+
+            magnet1Potential = magnet1.ReturnPotential(-10, 10);
+            magnet2Potential = magnet2.ReturnPotential(-10, 10);
+            RectPotential = GlobalRect.ReturnPotential(0, 0);
+            Painting();
+        }
+        #endregion
+
+        #region Обработка событий радиокнопок
+        private void RadioMagnet1_CheckedChanged(object sender, EventArgs e)
+        {
+            ScrollHeight.Value = (int)magnet1.center.Y;
+            ScrollWidth.Value = (int)magnet1.center.X;
+            ScrollAngle.Value = (int)(magnet1.angle * 360 / 2 / Math.PI);
+        }
+
+        private void RadioMagnet2_CheckedChanged(object sender, EventArgs e)
+        {
+            ScrollHeight.Value = (int)magnet2.center.Y;
+            ScrollWidth.Value = (int)magnet2.center.X;
+            ScrollAngle.Value = (int)(magnet2.angle * 360 / 2 / Math.PI);
+        }
+
+        #endregion
+
+        private void UpdateBtn_Click(object sender, EventArgs e)
+        {
+            list_triangles.Clear();
+            step_x = (float)double.Parse(StepXBox.Text);
+            step_y = (float)double.Parse(StepYBox.Text);
+
+            magnet1.width = (float)double.Parse(Width1Box.Text);
+            magnet2.width = (float)double.Parse(Width2Box.Text);
+            magnet1.height = (float)double.Parse(Height1Box.Text);
+            magnet2.height = (float)double.Parse(Height2Box.Text);
+
+            points.Clear();
+            points.AddRange(magnet1.ReturnRectangleDdiscret()); points.AddRange(magnet2.ReturnRectangleDdiscret());
+            points.AddRange(GlobalRect.ReturnRectangleDdiscret());
+
+            magnet1Potential.Clear();
+            magnet2Potential.Clear();
+            RectPotential.Clear();
+
+            magnet1Potential = magnet1.ReturnPotential(-10, 10);
+            magnet2Potential = magnet2.ReturnPotential(-10, 10);
+            RectPotential = GlobalRect.ReturnPotential(0, 0);
+
+            Painting();
+        }
+
 
         private void DrawBtn_Click(object sender, EventArgs e)
         {
@@ -226,7 +295,7 @@ namespace TriangleDeloneWithMagnetic
                                                     GlobalRect.ReturnRectangleDdiscret(),
                                                     magnet1.ReturnRectangleDdiscret(),
                                                     magnet2.ReturnRectangleDdiscret());
-                    galerkin.CreateMatrixA();
+                    //galerkin.CreateMatrixA();
                 }
                 x_now = GlobalRect.A.X;
             }

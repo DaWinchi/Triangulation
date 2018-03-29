@@ -60,7 +60,7 @@ namespace TriangleDeloneWithMagnetic
                 points.Add(bufPoint);
             }
         }
-        private List<Potential> ReturnPotential(float minU, float maxU)
+        public List<Potential> ReturnPotential(float minU, float maxU)
         {
             potential.Clear();
             CreateDiscret();
@@ -69,12 +69,20 @@ namespace TriangleDeloneWithMagnetic
             {
                 if(point.X<center.X)
                 {
-                    Potential pot = new Potential { point = point, value = minU };
+                    PointF newPoint = new PointF(
+                    (float)(point.X * Math.Cos(angle) - point.Y * Math.Sin(angle)),
+                    (float)(point.X * Math.Sin(angle) + point.Y * Math.Cos(angle))
+                    );
+                    Potential pot = new Potential { point = newPoint, value = minU };
                     potential.Add(pot);
                 }
                 else
                 {
-                    Potential pot = new Potential { point = point, value = maxU };
+                    PointF newPoint = new PointF(
+                    (float)(point.X * Math.Cos(angle) - point.Y * Math.Sin(angle)),
+                    (float)(point.X * Math.Sin(angle) + point.Y * Math.Cos(angle))
+                    );
+                    Potential pot = new Potential { point = newPoint, value = maxU };
                     potential.Add(pot);
                 }
             }
