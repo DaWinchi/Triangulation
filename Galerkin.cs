@@ -23,7 +23,7 @@ namespace TriangleDeloneWithMagnetic
         private List<PointF> magnet2_points;
         public List<Potential> potential;
         private List<List<float>> A;
-
+        private List<float> B;
         public Galerkin(List<Triangle> p_triangle,
                            List<PointF> p_allpoints,
                            List<PointF> p_rectpoints,
@@ -44,6 +44,7 @@ namespace TriangleDeloneWithMagnetic
             piramides = new List<Piramide>();
             potential = new List<Potential>();
             A = new List<List<float>>();
+
         }
 
         private float SquareTriangle(Triangle triangle)
@@ -169,6 +170,9 @@ namespace TriangleDeloneWithMagnetic
                 A.Add(list_a);
             }
         }
+        public void CreateB()
+        {
 
+        }
     }
 }

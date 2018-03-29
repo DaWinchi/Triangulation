@@ -16,10 +16,11 @@ namespace TriangleDeloneWithMagnetic
         public PointF A, B, C, D;
 
         List<PointF> points;
-
+        List<Potential> potential;
         public Magnet(float p_width, float p_height, PointF p_center, float p_angle, float p_step)
         {
             points = new List<PointF>();
+            potential = new List<Potential>();
             width = p_width;
             height = p_height;
             center = p_center;
@@ -59,7 +60,26 @@ namespace TriangleDeloneWithMagnetic
                 points.Add(bufPoint);
             }
         }
-
+        private List<Potential> ReturnPotential(float minU, float maxU)
+        {
+            potential.Clear();
+            CreateDiscret();
+            List<PointF> coordinates = new List<PointF>();
+            foreach(PointF point in points)
+            {
+                if(point.X<center.X)
+                {
+                    Potential pot = new Potential { point = point, value = minU };
+                    potential.Add(pot);
+                }
+                else
+                {
+                    Potential pot = new Potential { point = point, value = maxU };
+                    potential.Add(pot);
+                }
+            }
+            return potential;
+        }
         public List< PointF> FakePoints()
         {
 
