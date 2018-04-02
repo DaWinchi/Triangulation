@@ -180,7 +180,7 @@ namespace TriangleDeloneWithMagnetic
                                 tempTringles.Add(triangle);
                         }
 
-                        if (tempTringles.Count == 0) { value = 0; list_a.Add(value); }
+                        if (tempTringles.Count == 0) { value += 0; list_a.Add(value); }
                         else
                         {
                             foreach (Triangle triangle in tempTringles)
@@ -222,19 +222,18 @@ namespace TriangleDeloneWithMagnetic
                             tempTringles.Add(triangle);
                     }
 
-                    if (tempTringles.Count == 0) { value -= 0; }
-                    else
+                    if (tempTringles.Count != 0)
                     {
                         foreach (Triangle triangle in tempTringles)
                         {
-                            value -= boardPotential[j].value * SquareTriangle(triangle) *
+                            value +=boardPotential[j].value*SquareTriangle(triangle) *
                                 (DpDx(triangle, boardPotential[j].point) * DpDx(triangle, unknownPotential[i].point) +
                                 DpDy(triangle, boardPotential[j].point) * DpDy(triangle, unknownPotential[i].point));
                         }
                     }
 
                 }
-                B.Add(value);
+                B.Add(value*(-1));
             }
         }
         public List<float> MethodKachmarzh(float[] a, float[] b, int nn, int ny)

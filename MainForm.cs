@@ -35,8 +35,8 @@ namespace TriangleDeloneWithMagnetic
             GlobalRect = new Magnet(1.6f, 1.6f, centerGlobal, (float)(2 * Math.PI / 360 * 0), 0.2f);
 
 
-            magnet1Potential = magnet1.ReturnPotential(-100, 100);
-            magnet2Potential = magnet2.ReturnPotential(-100, 100);
+            magnet1Potential = magnet1.ReturnPotential(-10, 10);
+            magnet2Potential = magnet2.ReturnPotential(-10, 10);
             RectPotential = GlobalRect.ReturnPotential(0, 0);
 
             ScrollHeight.Minimum = (int)GlobalRect.A.Y;
@@ -156,14 +156,14 @@ namespace TriangleDeloneWithMagnetic
                     if (pot.value > 0)
                     {
                         tempBrush = new SolidBrush(Color.FromArgb((int)(255 / 10 * pot.value), 0, 0));
-                        tempBrush = new SolidBrush(Color.Red);
+                       // tempBrush = new SolidBrush(Color.Red);
                     }
                     else
                     {
                         tempBrush = new SolidBrush(Color.FromArgb(0, 0, (int)(255 / 10 * Math.Abs(pot.value))));
-                        tempBrush = new SolidBrush(Color.Blue);
+                      //  tempBrush = new SolidBrush(Color.Blue);
                     }
-                    graph.FillRectangle(tempBrush, (float)parametrs.X(width, pot.point.X) - 2, (float)parametrs.Y(height, pot.point.Y) - 2, 4, 4);
+                    graph.FillRectangle(tempBrush, (float)parametrs.X(width, pot.point.X) - 4, (float)parametrs.Y(height, pot.point.Y) - 4, 8, 8);
 
                 }
             }
@@ -340,7 +340,7 @@ namespace TriangleDeloneWithMagnetic
                     unknownPotential.Clear();
                     unknownPotential.AddRange(galerkin.unknownPotential);
                 }
-                x_now = GlobalRect.A.X;
+                x_now = GlobalRect.A.X+step_x;
             }
 
             Random rand = new Random();
