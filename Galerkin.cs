@@ -297,6 +297,14 @@ namespace TriangleDeloneWithMagnetic
             a = buf.ToArray();
             b = B.ToArray();
             C.AddRange(MethodKachmarzh(a, b, B.Count, B.Count));
+            List<Potential> newPotential = new List<Potential>();
+            for (int i = 0; i < unknownPotential.Count; i++)
+            {
+                Potential pot = new Potential { point = unknownPotential[i].point, value = C[i] };
+                newPotential.Add(pot);
+            }
+            unknownPotential.Clear();
+            unknownPotential.AddRange(newPotential);
 
         }
 

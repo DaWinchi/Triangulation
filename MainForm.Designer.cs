@@ -37,27 +37,31 @@
             this.RadioMagnet1 = new System.Windows.Forms.RadioButton();
             this.RadioMagnet2 = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.Height2Box = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.Width2Box = new System.Windows.Forms.TextBox();
+            this.Height1Box = new System.Windows.Forms.TextBox();
+            this.Width1Box = new System.Windows.Forms.TextBox();
             this.ScrollAngle = new System.Windows.Forms.TrackBar();
             this.StepXBox = new System.Windows.Forms.TextBox();
             this.StepYBox = new System.Windows.Forms.TextBox();
             this.UpdateBtn = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.Height1Box = new System.Windows.Forms.TextBox();
-            this.Width1Box = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.Height2Box = new System.Windows.Forms.TextBox();
-            this.Width2Box = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.radioTriangle = new System.Windows.Forms.RadioButton();
+            this.radioPotential = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.GraphicsBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ScrollHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ScrollWidth)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ScrollAngle)).BeginInit();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // GraphicsBox
@@ -143,6 +147,70 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Выберите магнит";
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(96, 98);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(54, 13);
+            this.label5.TabIndex = 20;
+            this.label5.Text = "Высота 2";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(96, 46);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(54, 13);
+            this.label3.TabIndex = 16;
+            this.label3.Text = "Высота 1";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(96, 73);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(55, 13);
+            this.label6.TabIndex = 19;
+            this.label6.Text = "Ширина 2";
+            // 
+            // Height2Box
+            // 
+            this.Height2Box.Location = new System.Drawing.Point(157, 98);
+            this.Height2Box.Name = "Height2Box";
+            this.Height2Box.Size = new System.Drawing.Size(36, 20);
+            this.Height2Box.TabIndex = 18;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(96, 21);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(55, 13);
+            this.label4.TabIndex = 15;
+            this.label4.Text = "Ширина 1";
+            // 
+            // Width2Box
+            // 
+            this.Width2Box.Location = new System.Drawing.Point(157, 73);
+            this.Width2Box.Name = "Width2Box";
+            this.Width2Box.Size = new System.Drawing.Size(36, 20);
+            this.Width2Box.TabIndex = 17;
+            // 
+            // Height1Box
+            // 
+            this.Height1Box.Location = new System.Drawing.Point(157, 46);
+            this.Height1Box.Name = "Height1Box";
+            this.Height1Box.Size = new System.Drawing.Size(36, 20);
+            this.Height1Box.TabIndex = 14;
+            // 
+            // Width1Box
+            // 
+            this.Width1Box.Location = new System.Drawing.Point(157, 21);
+            this.Width1Box.Name = "Width1Box";
+            this.Width1Box.Size = new System.Drawing.Size(36, 20);
+            this.Width1Box.TabIndex = 13;
+            // 
             // ScrollAngle
             // 
             this.ScrollAngle.Location = new System.Drawing.Point(659, 12);
@@ -168,7 +236,7 @@
             // 
             // UpdateBtn
             // 
-            this.UpdateBtn.Location = new System.Drawing.Point(981, 139);
+            this.UpdateBtn.Location = new System.Drawing.Point(829, 196);
             this.UpdateBtn.Name = "UpdateBtn";
             this.UpdateBtn.Size = new System.Drawing.Size(86, 37);
             this.UpdateBtn.TabIndex = 10;
@@ -194,70 +262,6 @@
             this.label2.TabIndex = 12;
             this.label2.Text = "Шаг по y";
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(96, 46);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(54, 13);
-            this.label3.TabIndex = 16;
-            this.label3.Text = "Высота 1";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(96, 21);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(55, 13);
-            this.label4.TabIndex = 15;
-            this.label4.Text = "Ширина 1";
-            // 
-            // Height1Box
-            // 
-            this.Height1Box.Location = new System.Drawing.Point(157, 46);
-            this.Height1Box.Name = "Height1Box";
-            this.Height1Box.Size = new System.Drawing.Size(36, 20);
-            this.Height1Box.TabIndex = 14;
-            // 
-            // Width1Box
-            // 
-            this.Width1Box.Location = new System.Drawing.Point(157, 21);
-            this.Width1Box.Name = "Width1Box";
-            this.Width1Box.Size = new System.Drawing.Size(36, 20);
-            this.Width1Box.TabIndex = 13;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(96, 98);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(54, 13);
-            this.label5.TabIndex = 20;
-            this.label5.Text = "Высота 2";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(96, 73);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(55, 13);
-            this.label6.TabIndex = 19;
-            this.label6.Text = "Ширина 2";
-            // 
-            // Height2Box
-            // 
-            this.Height2Box.Location = new System.Drawing.Point(157, 98);
-            this.Height2Box.Name = "Height2Box";
-            this.Height2Box.Size = new System.Drawing.Size(36, 20);
-            this.Height2Box.TabIndex = 18;
-            // 
-            // Width2Box
-            // 
-            this.Width2Box.Location = new System.Drawing.Point(157, 73);
-            this.Width2Box.Name = "Width2Box";
-            this.Width2Box.Size = new System.Drawing.Size(36, 20);
-            this.Width2Box.TabIndex = 17;
-            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.label2);
@@ -271,11 +275,47 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Дискретность сетки";
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.radioPotential);
+            this.groupBox3.Controls.Add(this.radioTriangle);
+            this.groupBox3.Location = new System.Drawing.Point(952, 19);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(163, 104);
+            this.groupBox3.TabIndex = 14;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Тип отображаемого содержимого";
+            // 
+            // radioTriangle
+            // 
+            this.radioTriangle.AutoSize = true;
+            this.radioTriangle.Checked = true;
+            this.radioTriangle.Location = new System.Drawing.Point(16, 35);
+            this.radioTriangle.Name = "radioTriangle";
+            this.radioTriangle.Size = new System.Drawing.Size(96, 17);
+            this.radioTriangle.TabIndex = 0;
+            this.radioTriangle.TabStop = true;
+            this.radioTriangle.Text = "Триангуляция";
+            this.radioTriangle.UseVisualStyleBackColor = true;
+            this.radioTriangle.CheckedChanged += new System.EventHandler(this.radioTriangle_CheckedChanged);
+            // 
+            // radioPotential
+            // 
+            this.radioPotential.AutoSize = true;
+            this.radioPotential.Location = new System.Drawing.Point(16, 62);
+            this.radioPotential.Name = "radioPotential";
+            this.radioPotential.Size = new System.Drawing.Size(80, 17);
+            this.radioPotential.TabIndex = 1;
+            this.radioPotential.Text = "Потенциал";
+            this.radioPotential.UseVisualStyleBackColor = true;
+            this.radioPotential.CheckedChanged += new System.EventHandler(this.radioPotential_CheckedChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1127, 664);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.UpdateBtn);
             this.Controls.Add(this.ScrollAngle);
@@ -294,6 +334,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.ScrollAngle)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -324,6 +366,9 @@
         private System.Windows.Forms.TextBox Height2Box;
         private System.Windows.Forms.TextBox Width2Box;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.RadioButton radioPotential;
+        private System.Windows.Forms.RadioButton radioTriangle;
     }
 }
 

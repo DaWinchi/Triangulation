@@ -30,13 +30,13 @@ namespace TriangleDeloneWithMagnetic
             RectPotential = new List<Potential>();
             unknownPotential = new List<Potential>();
 
-            magnet1 = new Magnet(0.4f, 0.2f, center1, (float)(2 * Math.PI / 360 * 45), step_x);
-            magnet2 = new Magnet(0.4f, 0.2f, center2, (float)(2 * Math.PI / 360 * 30), step_x);
+            magnet1 = new Magnet(0.4f, 0.2f, center1, (float)(2 * Math.PI / 360 * 45), step_x/2);
+            magnet2 = new Magnet(0.4f, 0.2f, center2, (float)(2 * Math.PI / 360 * 30), step_x/2);
             GlobalRect = new Magnet(1.6f, 1.6f, centerGlobal, (float)(2 * Math.PI / 360 * 0), 0.2f);
 
 
-            magnet1Potential = magnet1.ReturnPotential(-10, 10);
-            magnet2Potential = magnet2.ReturnPotential(-10, 10);
+            magnet1Potential = magnet1.ReturnPotential(-100, 100);
+            magnet2Potential = magnet2.ReturnPotential(-100, 100);
             RectPotential = GlobalRect.ReturnPotential(0, 0);
 
             ScrollHeight.Minimum = (int)GlobalRect.A.Y;
@@ -101,16 +101,18 @@ namespace TriangleDeloneWithMagnetic
             Pen trianglePen = new Pen(Color.Yellow, 1);
 
 
-
-            for (int i = 0; i < list_triangles.Count; i++)
+            if (radioTriangle.Checked)
             {
-                graph.DrawLine(trianglePen, (float)parametrs.X(width, list_triangles[i].point1.X), (float)parametrs.Y(height, list_triangles[i].point1.Y),
-                                            (float)parametrs.X(width, list_triangles[i].point2.X), (float)parametrs.Y(height, list_triangles[i].point2.Y));
-                graph.DrawLine(trianglePen, (float)parametrs.X(width, list_triangles[i].point2.X), (float)parametrs.Y(height, list_triangles[i].point2.Y),
-                                            (float)parametrs.X(width, list_triangles[i].point3.X), (float)parametrs.Y(height, list_triangles[i].point3.Y));
-                graph.DrawLine(trianglePen, (float)parametrs.X(width, list_triangles[i].point1.X), (float)parametrs.Y(height, list_triangles[i].point1.Y),
-                                            (float)parametrs.X(width, list_triangles[i].point3.X), (float)parametrs.Y(height, list_triangles[i].point3.Y));
+                for (int i = 0; i < list_triangles.Count; i++)
+                {
+                    graph.DrawLine(trianglePen, (float)parametrs.X(width, list_triangles[i].point1.X), (float)parametrs.Y(height, list_triangles[i].point1.Y),
+                                                (float)parametrs.X(width, list_triangles[i].point2.X), (float)parametrs.Y(height, list_triangles[i].point2.Y));
+                    graph.DrawLine(trianglePen, (float)parametrs.X(width, list_triangles[i].point2.X), (float)parametrs.Y(height, list_triangles[i].point2.Y),
+                                                (float)parametrs.X(width, list_triangles[i].point3.X), (float)parametrs.Y(height, list_triangles[i].point3.Y));
+                    graph.DrawLine(trianglePen, (float)parametrs.X(width, list_triangles[i].point1.X), (float)parametrs.Y(height, list_triangles[i].point1.Y),
+                                                (float)parametrs.X(width, list_triangles[i].point3.X), (float)parametrs.Y(height, list_triangles[i].point3.Y));
 
+                }
             }
 
             //foreach (PointF point in points)
@@ -118,6 +120,8 @@ namespace TriangleDeloneWithMagnetic
             //    graph.FillRectangle(brushPoint, (float)parametrs.X(width, point.X) - 2, (float)parametrs.Y(height, point.Y) - 2, 4, 4);
 
             //}
+
+            
 
             foreach (Potential pot in magnet1Potential)
             {
@@ -144,20 +148,24 @@ namespace TriangleDeloneWithMagnetic
 
             }
 
-            foreach (Potential pot in unknownPotential)
+            if (radioPotential.Checked)
             {
-                SolidBrush tempBrush;
-                if (pot.value > 0)
+                foreach (Potential pot in unknownPotential)
                 {
-                    tempBrush = new SolidBrush(Color.FromArgb((int)(255 / 10 * pot.value), 0, 0));
-                }
-                else
-                {
-                   tempBrush = new SolidBrush(Color.FromArgb(0, 0, (int)(255 / 10 * Math.Abs(pot.value))));
+                    SolidBrush tempBrush;
+                    if (pot.value > 0)
+                    {
+                        tempBrush = new SolidBrush(Color.FromArgb((int)(255 / 10 * pot.value), 0, 0));
+                        tempBrush = new SolidBrush(Color.Red);
+                    }
+                    else
+                    {
+                        tempBrush = new SolidBrush(Color.FromArgb(0, 0, (int)(255 / 10 * Math.Abs(pot.value))));
+                        tempBrush = new SolidBrush(Color.Blue);
+                    }
+                    graph.FillRectangle(tempBrush, (float)parametrs.X(width, pot.point.X) - 2, (float)parametrs.Y(height, pot.point.Y) - 2, 4, 4);
 
                 }
-                graph.FillRectangle(tempBrush, (float)parametrs.X(width, pot.point.X) - 2, (float)parametrs.Y(height, pot.point.Y) - 2, 4, 4);
-
             }
 
             GraphicsBox.Image = bmp;
@@ -250,6 +258,16 @@ namespace TriangleDeloneWithMagnetic
         }
 
         #endregion
+
+        private void radioTriangle_CheckedChanged(object sender, EventArgs e)
+        {
+            Painting();
+        }
+
+        private void radioPotential_CheckedChanged(object sender, EventArgs e)
+        {
+            Painting();
+        }
 
         private void UpdateBtn_Click(object sender, EventArgs e)
         {
