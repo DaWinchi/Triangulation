@@ -15,6 +15,7 @@ namespace TriangleDeloneWithMagnetic
         {
             points = new List<PointF>();
             list_triangle = new List<Triangle>();
+            unknownPotential = new List<Potential>();
         }
 
         public List<PointF> points;
@@ -22,6 +23,8 @@ namespace TriangleDeloneWithMagnetic
         List<PointF> GlobalPoints;
         List<PointF> FakePoints;
         List<PointF> MagnetPoints;
+
+        public List<Potential> unknownPotential;
 
         List<PointF> GlobalRectangle;
         Magnet Magnet1;
@@ -179,6 +182,9 @@ namespace TriangleDeloneWithMagnetic
 
             if (!IsInMagnets(point))
             {
+                Potential pot = new Potential { point = point, value = 0 };
+                unknownPotential.Add(pot);
+
                 List<PointF> newPoints = new List<PointF>();
                 newPoints.Add(point);
                 int numDeleting = 0;

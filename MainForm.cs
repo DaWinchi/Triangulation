@@ -33,9 +33,9 @@ namespace TriangleDeloneWithMagnetic
             magnet1 = new Magnet(0.4f, 0.2f, center1, (float)(2 * Math.PI / 360 * 45), step_x);
             magnet2 = new Magnet(0.4f, 0.2f, center2, (float)(2 * Math.PI / 360 * 30), step_x);
             GlobalRect = new Magnet(1.6f, 1.6f, centerGlobal, (float)(2 * Math.PI / 360 * 0), 0.2f);
-            
 
-            magnet1Potential = magnet1.ReturnPotential(-10,10);
+
+            magnet1Potential = magnet1.ReturnPotential(-10, 10);
             magnet2Potential = magnet2.ReturnPotential(-10, 10);
             RectPotential = GlobalRect.ReturnPotential(0, 0);
 
@@ -139,9 +139,25 @@ namespace TriangleDeloneWithMagnetic
 
             foreach (Potential pot in RectPotential)
             {
-                
-                    graph.FillRectangle(brushNullPot, (float)parametrs.X(width, pot.point.X) - 2, (float)parametrs.Y(height, pot.point.Y) - 2, 4, 4);
-               
+
+                graph.FillRectangle(brushNullPot, (float)parametrs.X(width, pot.point.X) - 2, (float)parametrs.Y(height, pot.point.Y) - 2, 4, 4);
+
+            }
+
+            foreach (Potential pot in unknownPotential)
+            {
+                SolidBrush tempBrush;
+                if (pot.value > 0)
+                {
+                    tempBrush = new SolidBrush(Color.FromArgb((int)(255 / 10 * pot.value), 0, 0));
+                }
+                else
+                {
+                   tempBrush = new SolidBrush(Color.FromArgb(0, 0, (int)(255 / 10 * Math.Abs(pot.value))));
+
+                }
+                graph.FillRectangle(tempBrush, (float)parametrs.X(width, pot.point.X) - 2, (float)parametrs.Y(height, pot.point.Y) - 2, 4, 4);
+
             }
 
             GraphicsBox.Image = bmp;
@@ -278,7 +294,7 @@ namespace TriangleDeloneWithMagnetic
             x_now = GlobalRect.A.X + step_x;
             y_now = GlobalRect.A.Y + step_y;
 
-           timer1.Start();
+            timer1.Start();
             Painting();
         }
 
@@ -301,8 +317,10 @@ namespace TriangleDeloneWithMagnetic
                                                     magnet1Potential,
                                                     magnet2Potential,
                                                     RectPotential,
-                                                    unknownPotential);
+                                                    triangulation.unknownPotential);
                     galerkin.CalculatePotential();
+                    unknownPotential.Clear();
+                    unknownPotential.AddRange(galerkin.unknownPotential);
                 }
                 x_now = GlobalRect.A.X;
             }
@@ -312,8 +330,7 @@ namespace TriangleDeloneWithMagnetic
             list_triangles.Clear();
             list_triangles.AddRange(triangulation.AddPoint(point));
 
-            Potential pot = new Potential { point = point, value = 0 };
-            unknownPotential.Add(pot);
+
 
             points.Add(point);
             x_now += step_x;
