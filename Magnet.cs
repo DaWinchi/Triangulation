@@ -32,10 +32,10 @@ namespace TriangleDeloneWithMagnetic
         {
             points.Clear();
             Random rand = new Random();
-            A = new PointF(center.X - width / 2 + (float)rand.NextDouble() / 1000, center.Y - height / 2 + (float)rand.NextDouble() / 1000);
-            B = new PointF(center.X + width / 2 + (float)rand.NextDouble() / 1000, center.Y - height / 2 + (float)rand.NextDouble() / 1000);
-            C = new PointF(center.X + width / 2 + (float)rand.NextDouble() / 1000, center.Y + height / 2 + (float)rand.NextDouble() / 1000);
-            D = new PointF(center.X - width / 2 + (float)rand.NextDouble() / 1000, center.Y + height / 2 + (float)rand.NextDouble() / 1000);
+            A = new PointF(center.X - width / 2 + (float)rand.NextDouble() / 10, center.Y - height / 2 + (float)rand.NextDouble() / 10);
+            B = new PointF(center.X + width / 2 + (float)rand.NextDouble() / 10, center.Y - height / 2 + (float)rand.NextDouble() / 10);
+            C = new PointF(center.X + width / 2 + (float)rand.NextDouble() / 10, center.Y + height / 2 + (float)rand.NextDouble() / 10);
+            D = new PointF(center.X - width / 2 + (float)rand.NextDouble() / 10, center.Y + height / 2 + (float)rand.NextDouble() / 10);
 
             for (float p = A.X; p < B.X; p += step)
             {

@@ -78,7 +78,7 @@ namespace TriangleDeloneWithMagnetic
             square = Math.Abs((triangle.point2.X - triangle.point1.X) *
                              (triangle.point3.Y - triangle.point1.Y) -
                              (triangle.point2.Y - triangle.point1.Y) *
-                             (triangle.point3.X - triangle.point1.X));
+                             (triangle.point3.X - triangle.point1.X))/2;
             return square;
         }
 
@@ -185,9 +185,64 @@ namespace TriangleDeloneWithMagnetic
                         {
                             foreach (Triangle triangle in tempTringles)
                             {
+                                PointF point1 = new PointF();
+                                PointF point2 = new PointF();
+                                PointF point3 = new PointF();
+
+                                if(triangle.point1==unknownPotential[i].point)
+                                {
+                                    if(triangle.point2==unknownPotential[j].point)
+                                    {
+                                        point1 = triangle.point1;
+                                        point2 = triangle.point2;
+                                        point3 = triangle.point3;
+                                    }
+                                    if (triangle.point3 == unknownPotential[j].point)
+                                    {
+                                        point1 = triangle.point1;
+                                        point2 = triangle.point3;
+                                        point3 = triangle.point2;
+                                    }
+                                }
+                                if (triangle.point2 == unknownPotential[i].point)
+                                {
+                                    if (triangle.point1 == unknownPotential[j].point)
+                                    {
+                                        point1 = triangle.point2;
+                                        point2 = triangle.point1;
+                                        point3 = triangle.point3;
+                                    }
+                                    if (triangle.point3 == unknownPotential[j].point)
+                                    {
+                                        point1 = triangle.point2;
+                                        point2 = triangle.point3;
+                                        point3 = triangle.point1;
+                                    }
+                                }
+                                if (triangle.point3 == unknownPotential[i].point)
+                                {
+                                    if (triangle.point2 == unknownPotential[j].point)
+                                    {
+                                        point1 = triangle.point3;
+                                        point2 = triangle.point2;
+                                        point3 = triangle.point1;
+                                    }
+                                    if (triangle.point1 == unknownPotential[j].point)
+                                    {
+                                        point1 = triangle.point3;
+                                        point2 = triangle.point1;
+                                        point3 = triangle.point2;
+                                    }
+                                }
+
+                                float koef_Ai = (point2.Y - point1.Y) * (-1) - (point3.Y - point1.Y) * (-1);
+                                float koef_Bi = (point3.X - point1.X) * (-1) - (point2.X - point1.X) * (-1);
+
+                                float koef_Aj = (point2.Y - point1.Y) * (0) - (point3.Y - point1.Y) * (1);
+                                float koef_Bj = (point3.X - point1.X) * (1) - (point2.X - point1.X) * (0);
+
                                 value += SquareTriangle(triangle) *
-                                    (DpDx(triangle, unknownPotential[i].point) * DpDx(triangle, unknownPotential[j].point) +
-                                    (DpDy(triangle, unknownPotential[i].point) * DpDy(triangle, unknownPotential[j].point)));
+                                    (koef_Ai * koef_Aj + koef_Bi * koef_Bj);
 
                             }
                             list_a.Add(value);
@@ -226,9 +281,65 @@ namespace TriangleDeloneWithMagnetic
                     {
                         foreach (Triangle triangle in tempTringles)
                         {
+                            PointF point1 = new PointF();
+                            PointF point2 = new PointF();
+                            PointF point3 = new PointF();
+
+
+                            if (triangle.point1 == unknownPotential[i].point)
+                            {
+                                if (triangle.point2 == boardPotential[j].point)
+                                {
+                                    point1 = triangle.point1;
+                                    point2 = triangle.point2;
+                                    point3 = triangle.point3;
+                                }
+                                if (triangle.point3 == boardPotential[j].point)
+                                {
+                                    point1 = triangle.point1;
+                                    point2 = triangle.point3;
+                                    point3 = triangle.point2;
+                                }
+                            }
+                            if (triangle.point2 == unknownPotential[i].point)
+                            {
+                                if (triangle.point1 == boardPotential[j].point)
+                                {
+                                    point1 = triangle.point2;
+                                    point2 = triangle.point1;
+                                    point3 = triangle.point3;
+                                }
+                                if (triangle.point3 == boardPotential[j].point)
+                                {
+                                    point1 = triangle.point2;
+                                    point2 = triangle.point3;
+                                    point3 = triangle.point1;
+                                }
+                            }
+                            if (triangle.point3 == unknownPotential[i].point)
+                            {
+                                if (triangle.point2 == boardPotential[j].point)
+                                {
+                                    point1 = triangle.point3;
+                                    point2 = triangle.point2;
+                                    point3 = triangle.point1;
+                                }
+                                if (triangle.point1 == boardPotential[j].point)
+                                {
+                                    point1 = triangle.point3;
+                                    point2 = triangle.point1;
+                                    point3 = triangle.point2;
+                                }
+                            }
+
+                            float koef_Ai = (point2.Y - point1.Y) * (-1) - (point3.Y - point1.Y) * (-1);
+                            float koef_Bi = (point3.X - point1.X) * (-1) - (point2.X - point1.X) * (-1);
+
+                            float koef_Aj = (point2.Y - point1.Y) * (0) - (point3.Y - point1.Y) * (1);
+                            float koef_Bj = (point3.X - point1.X) * (1) - (point2.X - point1.X) * (0);
+
                             value +=boardPotential[j].value*SquareTriangle(triangle) *
-                                (DpDx(triangle, boardPotential[j].point) * DpDx(triangle, unknownPotential[i].point) +
-                                DpDy(triangle, boardPotential[j].point) * DpDy(triangle, unknownPotential[i].point));
+                                (koef_Ai * koef_Aj + koef_Bi * koef_Bj);
                         }
                     }
 
@@ -283,6 +394,9 @@ namespace TriangleDeloneWithMagnetic
         }
         public void CalculatePotential()
         {
+            StreamWriter streamA = new StreamWriter("A.txt");
+            StreamWriter streamB = new StreamWriter("B.txt");
+            StreamWriter streamC = new StreamWriter("C.txt");
             CreateMatrixA();
             CreateB();
             C.Clear();
@@ -292,10 +406,23 @@ namespace TriangleDeloneWithMagnetic
             for (int i = 0; i < A.Count; i++)
             {
                 buf.AddRange(A[i]);
+                for(int j=0; j<A[i].Count; j++)
+                {
+                    streamA.Write(A[i][j]+"  ");
+
+                }
+                streamA.WriteLine();
+
             }
             a = buf.ToArray();
+            for (int i = 0; i < B.Count; i++) streamB.WriteLine(B[i]);
             b = B.ToArray();
             C.AddRange(MethodKachmarzh(a, b, B.Count, B.Count));
+            for (int i = 0; i < C.Count; i++) streamC.WriteLine(C[i]);
+
+            streamA.Close();
+            streamB.Close();
+            streamC.Close();
             List<Potential> newPotential = new List<Potential>();
             for (int i = 0; i < unknownPotential.Count; i++)
             {

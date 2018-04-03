@@ -19,10 +19,10 @@ namespace TriangleDeloneWithMagnetic
             InitializeComponent();
             parametrs = new Painter
             {
-                xmax = 1,
-                ymax = 1,
-                xmin = -1,
-                ymin = -1
+                xmax = 100,
+                ymax = 100,
+                xmin = -100,
+                ymin = -100
             };
             points = new List<PointF>();
             magnet1Potential = new List<Potential>();
@@ -30,9 +30,9 @@ namespace TriangleDeloneWithMagnetic
             RectPotential = new List<Potential>();
             unknownPotential = new List<Potential>();
 
-            magnet1 = new Magnet(0.4f, 0.2f, center1, (float)(2 * Math.PI / 360 * 45), step_x/2);
-            magnet2 = new Magnet(0.4f, 0.2f, center2, (float)(2 * Math.PI / 360 * 30), step_x/2);
-            GlobalRect = new Magnet(1.6f, 1.6f, centerGlobal, (float)(2 * Math.PI / 360 * 0), 0.2f);
+            magnet1 = new Magnet(40, 20, center1, (float)(2 * Math.PI / 360 * 45), step_x/2);
+            magnet2 = new Magnet(40, 20, center2, (float)(2 * Math.PI / 360 * 30), step_x/2);
+            GlobalRect = new Magnet(160, 160, centerGlobal, (float)(2 * Math.PI / 360 * 0), 20);
 
 
             magnet1Potential = magnet1.ReturnPotential(-10, 10);
@@ -42,8 +42,8 @@ namespace TriangleDeloneWithMagnetic
             ScrollHeight.Minimum = (int)GlobalRect.A.Y;
             ScrollHeight.Value = (int)magnet1.center.Y;
             ScrollHeight.Maximum = (int)GlobalRect.D.Y;
-
-            ScrollWidth.Minimum = (int)GlobalRect.A.X;
+        
+            ScrollWidth.Minimum = (int)GlobalRect.A.X ;
             ScrollWidth.Value = (int)magnet1.center.X;
             ScrollWidth.Maximum = (int)GlobalRect.B.X;
 
@@ -51,8 +51,8 @@ namespace TriangleDeloneWithMagnetic
             ScrollAngle.Maximum = 360;
             ScrollAngle.Value = 45;
 
-            StepXBox.Text = "0,1";
-            StepYBox.Text = "0,1";
+            StepXBox.Text = "10";
+            StepYBox.Text = "10";
 
             Width1Box.Text = magnet1.width.ToString();
             Width2Box.Text = magnet2.width.ToString();
@@ -74,11 +74,11 @@ namespace TriangleDeloneWithMagnetic
         List<Potential> RectPotential;
         Triangulation triangulation;
 
-        Magnet magnet1; PointF center1 = new PointF(0, -0.5f);
-        Magnet magnet2; PointF center2 = new PointF(0, 0.5f);
+        Magnet magnet1; PointF center1 = new PointF(0, -50);
+        Magnet magnet2; PointF center2 = new PointF(0, 50);
         Magnet GlobalRect; PointF centerGlobal = new PointF(0, 0);
 
-        float step_x = 0.07F, step_y = 0.07F, x_now, y_now;
+        float step_x = 7F, step_y = 7F, x_now, y_now;
 
         List<Triangle> list_triangles = new List<Triangle>();
         private void Painting()
@@ -156,12 +156,12 @@ namespace TriangleDeloneWithMagnetic
                     if (pot.value > 0)
                     {
                         tempBrush = new SolidBrush(Color.FromArgb((int)(255 / 10 * pot.value), 0, 0));
-                       // tempBrush = new SolidBrush(Color.Red);
+                       tempBrush = new SolidBrush(Color.Red);
                     }
                     else
                     {
                         tempBrush = new SolidBrush(Color.FromArgb(0, 0, (int)(255 / 10 * Math.Abs(pot.value))));
-                      //  tempBrush = new SolidBrush(Color.Blue);
+                       tempBrush = new SolidBrush(Color.Blue);
                     }
                     graph.FillRectangle(tempBrush, (float)parametrs.X(width, pot.point.X) - 4, (float)parametrs.Y(height, pot.point.Y) - 4, 8, 8);
 
@@ -299,8 +299,8 @@ namespace TriangleDeloneWithMagnetic
             triangulation = new Triangulation();
             list_triangles.Clear();
 
-            PointF point1 = new PointF(3, 0); PointF point2 = new PointF(-3, 0);
-            PointF point3 = new PointF(0, 3); PointF point4 = new PointF(0, -3);
+            PointF point1 = new PointF(300, 0); PointF point2 = new PointF(-300, 0);
+            PointF point3 = new PointF(0, 300); PointF point4 = new PointF(0, -300);
 
             triangulation.AddGlobalPoints(point1, point2, point3, point4,
                                            GlobalRect.points,
@@ -344,7 +344,7 @@ namespace TriangleDeloneWithMagnetic
             }
 
             Random rand = new Random();
-            PointF point = new PointF(x_now + (float)rand.NextDouble() / 100, y_now + (float)rand.NextDouble() / 100);
+            PointF point = new PointF(x_now + (float)rand.NextDouble()/10, y_now + (float)rand.NextDouble()/10);
             list_triangles.Clear();
             list_triangles.AddRange(triangulation.AddPoint(point));
 
