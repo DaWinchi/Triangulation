@@ -16,7 +16,7 @@ namespace TriangleDeloneWithMagnetic
 
         public ForceLines(List<Triangle> p_triangles, List<Potential> p_magnet1, List<Potential> p_magnet2)
         {
-            triangles = new List<Triangle>();
+            triangles = new List<TrianglePotential>();
             forceLines = new List<LevelLines>();
 
             magnet1 = new List<Potential>();
