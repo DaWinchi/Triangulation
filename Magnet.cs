@@ -65,13 +65,14 @@ namespace TriangleDeloneWithMagnetic
             potential.Clear();
             CreateDiscret();
             List<PointF> coordinates = new List<PointF>();
-            foreach(PointF point in points)
+            int size_points = points.Count;
+            for(int i=0; i<size_points; i++)
             {
-                if(point.X<center.X)
+                if(points[i].X<center.X)
                 {
                     PointF newPoint = new PointF(
-                    (float)(point.X * Math.Cos(angle) - point.Y * Math.Sin(angle)),
-                    (float)(point.X * Math.Sin(angle) + point.Y * Math.Cos(angle))
+                    (float)(points[i].X * Math.Cos(angle) - points[i].Y * Math.Sin(angle)),
+                    (float)(points[i].X * Math.Sin(angle) + points[i].Y * Math.Cos(angle))
                     );
                     Potential pot = new Potential { point = newPoint, value = minU };
                     potential.Add(pot);
@@ -79,17 +80,19 @@ namespace TriangleDeloneWithMagnetic
                 else
                 {
                     PointF newPoint = new PointF(
-                    (float)(point.X * Math.Cos(angle) - point.Y * Math.Sin(angle)),
-                    (float)(point.X * Math.Sin(angle) + point.Y * Math.Cos(angle))
+                    (float)(points[i].X * Math.Cos(angle) - points[i].Y * Math.Sin(angle)),
+                    (float)(points[i].X * Math.Sin(angle) + points[i].Y * Math.Cos(angle))
                     );
                     Potential pot = new Potential { point = newPoint, value = maxU };
                     potential.Add(pot);
                 }
             }
             points.Clear();
-            foreach(Potential pot in potential)
+
+            int size_potential = potential.Count;
+            for(int i=0; i<size_potential;i++)
             {
-                points.Add(pot.point);
+                points.Add(potential[i].point);
             }
 
             PointF newPoint1 = new PointF((float)(A.X * Math.Cos(angle) - A.Y * Math.Sin(angle)),

@@ -193,8 +193,10 @@ namespace TriangleDeloneWithMagnetic
                 {
                     bool detected = false;
                     numDeleting = 0;
-                    foreach (Triangle triangle in list_triangle)
+                    int size_triangle = list_triangle.Count;
+                    for(int i=0; i<size_triangle; i++)
                     {
+                        Triangle triangle = list_triangle[i];
                         bool IsInMagnet = false;
                         foreach (PointF bufPoint in FakePoints)
                         {
