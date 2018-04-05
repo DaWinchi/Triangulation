@@ -140,6 +140,7 @@ namespace TriangleDeloneWithMagnetic
         public void CreateMatrixA()
         {
             A.Clear();
+            int size_triangles = triangles.Count;
             for (int i = 0; i < unknownPotential.Count; i++)
             {
                 List<float> list_a = new List<float>();
@@ -149,8 +150,11 @@ namespace TriangleDeloneWithMagnetic
                     if (i == j)
                     {
                         List<Triangle> tempTringles = new List<Triangle>();
-                        foreach (Triangle triangle in triangles)
+                       
+                        for(int counter=0; counter<size_triangles; counter++)
                         {
+                            Triangle triangle = triangles[counter];
+                            
                             if (triangle.point1 == unknownPotential[i].point ||
                                 triangle.point2 == unknownPotential[i].point ||
                                 triangle.point3 == unknownPotential[i].point)
@@ -168,8 +172,9 @@ namespace TriangleDeloneWithMagnetic
                     else if (i != j)
                     {
                         List<Triangle> tempTringles = new List<Triangle>();
-                        foreach (Triangle triangle in triangles)
+                        for (int counter = 0; counter < size_triangles; counter++)
                         {
+                            Triangle triangle = triangles[counter];
                             PointF pi = unknownPotential[i].point, pj = unknownPotential[j].point;
                             if ((triangle.point1 == pi && triangle.point2 == pj) ||
                                 (triangle.point1 == pi && triangle.point3 == pj) ||
@@ -255,6 +260,7 @@ namespace TriangleDeloneWithMagnetic
         public void CreateB()
         {
             B.Clear();
+            int size_triangles = triangles.Count;
             List<Potential> boardPotential = new List<Potential>();
             boardPotential.AddRange(magnet1Potential);
             boardPotential.AddRange(magnet2Potential);
@@ -265,8 +271,9 @@ namespace TriangleDeloneWithMagnetic
                 for (int j = 0; j < boardPotential.Count; j++)
                 {
                     List<Triangle> tempTringles = new List<Triangle>();
-                    foreach (Triangle triangle in triangles)
+                    for (int counter = 0; counter < size_triangles; counter++)
                     {
+                        Triangle triangle = triangles[counter];
                         PointF pi = unknownPotential[i].point, pj = boardPotential[j].point;
                         if ((triangle.point1 == pi && triangle.point2 == pj) ||
                             (triangle.point1 == pi && triangle.point3 == pj) ||

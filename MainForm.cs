@@ -34,9 +34,9 @@ namespace TriangleDeloneWithMagnetic
             trianglesWithPotential = new List<TrianglePotential>();
             levelLines = new List<LevelLines>();
 
-            magnet1 = new Magnet(50, 20, center1, (float)(2 * Math.PI / 360 * 45), 2);
-            magnet2 = new Magnet(50, 20, center2, (float)(2 * Math.PI / 360 * 30), 2);
-            GlobalRect = new Magnet(160, 160, centerGlobal, (float)(2 * Math.PI / 360 * 0), 10);
+            magnet1 = new Magnet(50, 20, center1, (float)(2 * Math.PI / 360 * 45), 3);
+            magnet2 = new Magnet(50, 20, center2, (float)(2 * Math.PI / 360 * 30), 3);
+            GlobalRect = new Magnet(160, 160, centerGlobal, (float)(2 * Math.PI / 360 * 0), 5);
 
 
             magnet1Potential = magnet1.ReturnPotential(-10, 10);
@@ -366,7 +366,7 @@ namespace TriangleDeloneWithMagnetic
                     allPotential.AddRange(unknownPotential);
                     CreateTrianglesWithPotential();
 
-                    Lines lines = new Lines(trianglesWithPotential, 10, -10, 2);
+                    Lines lines = new Lines(trianglesWithPotential, 5, -5, 2);
                     levelLines.Clear();
                     levelLines.AddRange(lines.GetLevelLines());
 
