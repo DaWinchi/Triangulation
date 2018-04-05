@@ -95,7 +95,7 @@ namespace TriangleDeloneWithMagnetic
 
             bmp = new Bitmap(width, height);
             graph = Graphics.FromImage(bmp);
-
+            graph.SmoothingMode = SmoothingMode.AntiAlias;
 
             SolidBrush brushBkgrd = new SolidBrush(Color.Black);
             SolidBrush brushPoint = new SolidBrush(Color.Red);
@@ -108,6 +108,7 @@ namespace TriangleDeloneWithMagnetic
 
             Pen trianglePen = new Pen(Color.Yellow, 1);
             Pen magnetPen = new Pen(Color.DarkBlue, 3);
+
 
 
             if (radioTriangle.Checked)
