@@ -29,9 +29,12 @@ namespace TriangleDeloneWithMagnetic
             magnet2Potential = new List<Potential>();
             RectPotential = new List<Potential>();
             unknownPotential = new List<Potential>();
+            allPotential = new List<Potential>();
 
-            magnet1 = new Magnet(40, 20, center1, (float)(2 * Math.PI / 360 * 45), step_x/2);
-            magnet2 = new Magnet(40, 20, center2, (float)(2 * Math.PI / 360 * 30), step_x/2);
+            trianglesWithPotential = new List<TrianglePotential>();
+
+            magnet1 = new Magnet(50, 20, center1, (float)(2 * Math.PI / 360 * 45), step_x);
+            magnet2 = new Magnet(50, 20, center2, (float)(2 * Math.PI / 360 * 30), step_x);
             GlobalRect = new Magnet(160, 160, centerGlobal, (float)(2 * Math.PI / 360 * 0), 20);
 
 
@@ -51,8 +54,8 @@ namespace TriangleDeloneWithMagnetic
             ScrollAngle.Maximum = 360;
             ScrollAngle.Value = 45;
 
-            StepXBox.Text = "10";
-            StepYBox.Text = "10";
+            StepXBox.Text = "8";
+            StepYBox.Text = "8";
 
             Width1Box.Text = magnet1.width.ToString();
             Width2Box.Text = magnet2.width.ToString();
@@ -68,6 +71,9 @@ namespace TriangleDeloneWithMagnetic
         List<PointF> points;
 
         List<Potential> unknownPotential;
+        List<Potential> allPotential;
+
+        List<TrianglePotential> trianglesWithPotential;
 
         List<Potential> magnet1Potential;
         List<Potential> magnet2Potential;
@@ -156,12 +162,12 @@ namespace TriangleDeloneWithMagnetic
                     if (pot.value > 0)
                     {
                         tempBrush = new SolidBrush(Color.FromArgb((int)(255 / 10 * pot.value), 0, 0));
-                       tempBrush = new SolidBrush(Color.Red);
+                      // tempBrush = new SolidBrush(Color.Red);
                     }
                     else
                     {
                         tempBrush = new SolidBrush(Color.FromArgb(0, 0, (int)(255 / 10 * Math.Abs(pot.value))));
-                       tempBrush = new SolidBrush(Color.Blue);
+                     //  tempBrush = new SolidBrush(Color.Blue);
                     }
                     graph.FillRectangle(tempBrush, (float)parametrs.X(width, pot.point.X) - 4, (float)parametrs.Y(height, pot.point.Y) - 4, 8, 8);
 
@@ -339,6 +345,12 @@ namespace TriangleDeloneWithMagnetic
                     galerkin.CalculatePotential();
                     unknownPotential.Clear();
                     unknownPotential.AddRange(galerkin.unknownPotential);
+                    allPotential.Clear();
+                    allPotential.AddRange(magnet1Potential);
+                    allPotential.AddRange(magnet2Potential);
+                    allPotential.AddRange(RectPotential);
+                    allPotential.AddRange(unknownPotential);
+                    CreateTrianglesWithPotential();
                 }
                 x_now = GlobalRect.A.X+step_x;
             }
@@ -354,6 +366,24 @@ namespace TriangleDeloneWithMagnetic
             x_now += step_x;
             Painting();
 
+        }
+
+        private void CreateTrianglesWithPotential()
+        {
+            trianglesWithPotential.Clear();
+            foreach(Triangle triangle in list_triangles)
+            {
+                TrianglePotential TP = new TrianglePotential();
+
+                foreach(Potential pot in allPotential)
+                {
+                    if (pot.point == triangle.point1) { TP.point1.point = triangle.point1; TP.point1.value = pot.value; continue; }
+                    if (pot.point == triangle.point2) { TP.point2.point = triangle.point2; TP.point2.value = pot.value; continue; }
+                    if (pot.point == triangle.point3) { TP.point3.point = triangle.point3; TP.point3.value = pot.value; continue; }
+                }
+                trianglesWithPotential.Add(TP);
+                
+            }
         }
     }
 

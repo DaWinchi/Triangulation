@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace TriangleDeloneWithMagnetic
 {
     public struct Triangle { public PointF point1; public PointF point2; public PointF point3; }
+    public struct TrianglePotential { public Potential point1; public Potential point2; public Potential point3; }
     class Triangulation
     {
 
