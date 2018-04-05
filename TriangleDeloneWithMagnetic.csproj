@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Galerkin.cs" />
+    <Compile Include="Lines.cs" />
     <Compile Include="Magnet.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

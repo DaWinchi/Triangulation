@@ -32,10 +32,11 @@ namespace TriangleDeloneWithMagnetic
             allPotential = new List<Potential>();
 
             trianglesWithPotential = new List<TrianglePotential>();
+            levelLines = new List<LevelLines>();
 
-            magnet1 = new Magnet(50, 20, center1, (float)(2 * Math.PI / 360 * 45), step_x);
-            magnet2 = new Magnet(50, 20, center2, (float)(2 * Math.PI / 360 * 30), step_x);
-            GlobalRect = new Magnet(160, 160, centerGlobal, (float)(2 * Math.PI / 360 * 0), 20);
+            magnet1 = new Magnet(50, 20, center1, (float)(2 * Math.PI / 360 * 45), 2);
+            magnet2 = new Magnet(50, 20, center2, (float)(2 * Math.PI / 360 * 30), 2);
+            GlobalRect = new Magnet(160, 160, centerGlobal, (float)(2 * Math.PI / 360 * 0), 10);
 
 
             magnet1Potential = magnet1.ReturnPotential(-10, 10);
@@ -74,6 +75,7 @@ namespace TriangleDeloneWithMagnetic
         List<Potential> allPotential;
 
         List<TrianglePotential> trianglesWithPotential;
+        List<LevelLines> levelLines;
 
         List<Potential> magnet1Potential;
         List<Potential> magnet2Potential;
@@ -84,7 +86,7 @@ namespace TriangleDeloneWithMagnetic
         Magnet magnet2; PointF center2 = new PointF(0, 50);
         Magnet GlobalRect; PointF centerGlobal = new PointF(0, 0);
 
-        float step_x = 7F, step_y = 7F, x_now, y_now;
+        float step_x = 8F, step_y = 8F, x_now, y_now;
 
         List<Triangle> list_triangles = new List<Triangle>();
         private void Painting()
@@ -105,6 +107,7 @@ namespace TriangleDeloneWithMagnetic
 
 
             Pen trianglePen = new Pen(Color.Yellow, 1);
+            Pen magnetPen = new Pen(Color.DarkBlue, 3);
 
 
             if (radioTriangle.Checked)
@@ -121,29 +124,30 @@ namespace TriangleDeloneWithMagnetic
                 }
             }
 
-            //foreach (PointF point in points)
+           
+            //for(int i=0; i<magnet1Potential.Count-1; i++)
             //{
-            //    graph.FillRectangle(brushPoint, (float)parametrs.X(width, point.X) - 2, (float)parametrs.Y(height, point.Y) - 2, 4, 4);
+            //    graph.DrawLine(magnetPen, (float)parametrs.X(width, magnet1Potential[i].point.X), (float)parametrs.Y(height, magnet1Potential[i].point.Y),
+            //                                   (float)parametrs.X(width, magnet1Potential[i+1].point.X), (float)parametrs.Y(height, magnet1Potential[i+1].point.Y));
 
             //}
 
-            
 
             foreach (Potential pot in magnet1Potential)
             {
                 if (pot.value < 0)
-                    graph.FillRectangle(brushMinPot, (float)parametrs.X(width, pot.point.X) - 2, (float)parametrs.Y(height, pot.point.Y) - 2, 4, 4);
+                    graph.FillEllipse(brushMinPot, (float)parametrs.X(width, pot.point.X) - 4, (float)parametrs.Y(height, pot.point.Y) - 4, 8, 8);
                 else
-                    graph.FillRectangle(brushMaxPot, (float)parametrs.X(width, pot.point.X) - 2, (float)parametrs.Y(height, pot.point.Y) - 2, 4, 4);
+                    graph.FillEllipse(brushMaxPot, (float)parametrs.X(width, pot.point.X) - 4, (float)parametrs.Y(height, pot.point.Y) - 4, 8, 8);
 
             }
 
             foreach (Potential pot in magnet2Potential)
             {
                 if (pot.value < 0)
-                    graph.FillRectangle(brushMinPot, (float)parametrs.X(width, pot.point.X) - 2, (float)parametrs.Y(height, pot.point.Y) - 2, 4, 4);
+                    graph.FillEllipse(brushMinPot, (float)parametrs.X(width, pot.point.X) - 4, (float)parametrs.Y(height, pot.point.Y) - 4, 8, 8);
                 else
-                    graph.FillRectangle(brushMaxPot, (float)parametrs.X(width, pot.point.X) - 2, (float)parametrs.Y(height, pot.point.Y) - 2, 4, 4);
+                    graph.FillEllipse(brushMaxPot, (float)parametrs.X(width, pot.point.X) - 4, (float)parametrs.Y(height, pot.point.Y) - 4, 8, 8);
 
             }
 
@@ -171,6 +175,16 @@ namespace TriangleDeloneWithMagnetic
                     }
                     graph.FillRectangle(tempBrush, (float)parametrs.X(width, pot.point.X) - 4, (float)parametrs.Y(height, pot.point.Y) - 4, 8, 8);
 
+                }
+
+                if(levelLines.Count>0)
+                {
+                    foreach(LevelLines line in levelLines)
+                    {
+                        graph.DrawLine(trianglePen, (float)parametrs.X(width, line.point1.X), (float)parametrs.Y(height, line.point1.Y),
+                                               (float)parametrs.X(width, line.point2.X), (float)parametrs.Y(height, line.point2.Y));
+
+                    }
                 }
             }
 
@@ -351,6 +365,11 @@ namespace TriangleDeloneWithMagnetic
                     allPotential.AddRange(RectPotential);
                     allPotential.AddRange(unknownPotential);
                     CreateTrianglesWithPotential();
+
+                    Lines lines = new Lines(trianglesWithPotential, 10, -10, 2);
+                    levelLines.Clear();
+                    levelLines.AddRange(lines.GetLevelLines());
+
                 }
                 x_now = GlobalRect.A.X+step_x;
             }
