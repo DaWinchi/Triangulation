@@ -56,8 +56,8 @@ namespace TriangleDeloneWithMagnetic
             ScrollAngle.Maximum = 360;
             ScrollAngle.Value = 45;
 
-            StepXBox.Text = "8";
-            StepYBox.Text = "8";
+            StepXBox.Text = "12";
+            StepYBox.Text = "12";
 
             Width1Box.Text = magnet1.width.ToString();
             Width2Box.Text = magnet2.width.ToString();
@@ -88,7 +88,7 @@ namespace TriangleDeloneWithMagnetic
         Magnet magnet2; PointF center2 = new PointF(0, 50);
         Magnet GlobalRect; PointF centerGlobal = new PointF(0, 0);
 
-        float step_x = 8F, step_y = 8F, x_now, y_now;
+        float step_x = 12F, step_y = 12F, x_now, y_now;
 
         List<Triangle> list_triangles = new List<Triangle>();
         private void Painting()
@@ -97,7 +97,7 @@ namespace TriangleDeloneWithMagnetic
 
             bmp = new Bitmap(width, height);
             graph = Graphics.FromImage(bmp);
-            graph.SmoothingMode = SmoothingMode.AntiAlias;
+          //  graph.SmoothingMode = SmoothingMode.AntiAlias;
 
             SolidBrush brushBkgrd = new SolidBrush(Color.Black);
             SolidBrush brushPoint = new SolidBrush(Color.Red);

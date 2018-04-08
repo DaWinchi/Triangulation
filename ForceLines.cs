@@ -57,19 +57,26 @@ namespace TriangleDeloneWithMagnetic
             int size_triangles = triangles.Count;
             int size_magnet1 = magnet1.Count;
             forceLines.Clear();
-            for (int i = 0; i < size_magnet1; ++i)
+            for (int i = 0; i < size_magnet1; i+=2)
             {
                 Potential pot = magnet1[i];
-                int num_triangle = 0;
+                PointF reducentPoint = new PointF();
+                reducentPoint = pot.point;
+
                 if (pot.value > 0)
                 {
+                    int num_triangle = 0;
+
                     /*Поиск любого треугольника на границе магнита содержащего точку pot*/
                     for (int j = 0; j < size_triangles; j++)
                     {
                         if (pot.point == triangles[j].point1.point ||
                             pot.point == triangles[j].point2.point ||
                             pot.point == triangles[j].point3.point)
+                        {
                             num_triangle = j;
+                            break;
+                        }
                     }
 
                     float A = -DpDx(triangles[num_triangle].point1,
@@ -93,7 +100,7 @@ namespace TriangleDeloneWithMagnetic
                         ka = Ua(triangles[num_triangle].point2.point, triangles[num_triangle].point3.point, pot.point, pot2);
                         kb = Ub(triangles[num_triangle].point2.point, triangles[num_triangle].point3.point, pot.point, pot2);
 
-                        if (ka <= 1 && ka >= 0 && kb <= 1 && kb >= 0)
+                        if (ka <= 1 && ka >= 0)
                         {
                             pointIntersect.X = triangles[num_triangle].point2.point.X
                                             + ka * (triangles[num_triangle].point3.point.X
@@ -148,7 +155,7 @@ namespace TriangleDeloneWithMagnetic
 
                     forceLines.Add(line);
 
-                    for (int z = 0; z < 500; z++)
+                    for (int z = 0; z < 50; z++)
                     {
                         TrianglePotential triangle = new TrianglePotential();
                         PointF passPoint1 = new PointF();
@@ -159,42 +166,42 @@ namespace TriangleDeloneWithMagnetic
                         {
                             TrianglePotential tr = new TrianglePotential();
                             tr = triangles[j];
-                            if (futureBoardPoint1 == tr.point1.point && futureBoardPoint2 == tr.point2.point)
+                            if (futureBoardPoint1 == tr.point1.point && futureBoardPoint2 == tr.point2.point && reducentPoint != tr.point3.point)
                             {
                                 num_triangle = j;
                                 passPoint1 = tr.point1.point;
                                 passPoint2 = tr.point2.point;
                                 mainPoint = tr.point3.point;
                             }
-                            if (futureBoardPoint1 == tr.point1.point && futureBoardPoint2 == tr.point3.point)
+                            if (futureBoardPoint1 == tr.point1.point && futureBoardPoint2 == tr.point3.point && reducentPoint != tr.point2.point)
                             {
                                 num_triangle = j;
                                 passPoint1 = tr.point1.point;
                                 passPoint2 = tr.point3.point;
                                 mainPoint = tr.point2.point;
                             }
-                            if (futureBoardPoint1 == tr.point2.point && futureBoardPoint2 == tr.point1.point)
+                            if (futureBoardPoint1 == tr.point2.point && futureBoardPoint2 == tr.point1.point && reducentPoint != tr.point3.point)
                             {
                                 num_triangle = j;
                                 passPoint1 = tr.point2.point;
                                 passPoint2 = tr.point1.point;
                                 mainPoint = tr.point3.point;
                             }
-                            if (futureBoardPoint1 == tr.point2.point && futureBoardPoint2 == tr.point3.point)
+                            if (futureBoardPoint1 == tr.point2.point && futureBoardPoint2 == tr.point3.point && reducentPoint != tr.point1.point)
                             {
                                 num_triangle = j;
                                 passPoint1 = tr.point1.point;
                                 passPoint2 = tr.point3.point;
                                 mainPoint = tr.point2.point;
                             }
-                            if (futureBoardPoint1 == tr.point3.point && futureBoardPoint2 == tr.point2.point)
+                            if (futureBoardPoint1 == tr.point3.point && futureBoardPoint2 == tr.point2.point && reducentPoint != tr.point1.point)
                             {
                                 num_triangle = j;
                                 passPoint1 = tr.point3.point;
                                 passPoint2 = tr.point2.point;
                                 mainPoint = tr.point1.point;
                             }
-                            if (futureBoardPoint1 == tr.point3.point && futureBoardPoint2 == tr.point1.point)
+                            if (futureBoardPoint1 == tr.point3.point && futureBoardPoint2 == tr.point1.point && reducentPoint != tr.point2.point)
                             {
 
                                 num_triangle = j;
@@ -220,44 +227,56 @@ namespace TriangleDeloneWithMagnetic
                         float ka = 0, kb = 0;
                         ka = Ua(mainPoint, passPoint2, pot.point, pot2);
                         kb = Ub(mainPoint, passPoint2, pot.point, pot2);
-
+                        PointF intersectBuf = new PointF();
                         if (ka <= 1 && ka >= 0)
                         {
-                            pointIntersect.X = mainPoint.X + ka * (passPoint2.X - mainPoint.X);
-                            pointIntersect.Y = mainPoint.Y + ka * (passPoint2.Y - mainPoint.Y);
+                            intersectBuf.X = mainPoint.X + ka * (passPoint2.X - mainPoint.X);
+                            intersectBuf.Y = mainPoint.Y + ka * (passPoint2.Y - mainPoint.Y);
                             futureBoardPoint1 = mainPoint;
                             futureBoardPoint2 = passPoint2;
+                            reducentPoint = passPoint1;
 
                         }
 
-                        if (!IsPointOnLine(mainPoint, passPoint2, pointIntersect))
+                        if (!IsPointOnLine(mainPoint, passPoint2, intersectBuf))
                         {
                             ka = Ua(mainPoint, passPoint1, pot.point, pot2);
                             kb = Ub(mainPoint, passPoint1, pot.point, pot2);
 
                             if (ka <= 1 && ka >= 0)
                             {
-                                pointIntersect.X = mainPoint.X + ka * (passPoint1.X - mainPoint.X);
-                                pointIntersect.Y = mainPoint.Y + ka * (passPoint1.Y - mainPoint.Y);
+                                intersectBuf.X = mainPoint.X + ka * (passPoint1.X - mainPoint.X);
+                                intersectBuf.Y = mainPoint.Y + ka * (passPoint1.Y - mainPoint.Y);
                                 futureBoardPoint1 = mainPoint;
                                 futureBoardPoint2 = passPoint1;
+                                reducentPoint = passPoint2;
 
+
+                                if (IsPointOnLine(mainPoint, passPoint1, intersectBuf))
+                                {
+                                    pointIntersect = intersectBuf;
+                                    line.point1 = pot.point;
+                                    line.point2 = pointIntersect;
+
+                                    forceLines.Add(line);
+                                }
                             }
+                        }
+                        else
+                        {
+                            pointIntersect = intersectBuf;
+                            line.point1 = pot.point;
+                            line.point2 = pointIntersect;
+
+                            forceLines.Add(line);
                         }
 
 
-
-
-                        line.point1 = pot.point;
-                        line.point2 = pointIntersect;
-
-                        forceLines.Add(line);
-
                     }
 
-
-
+                    break;
                 }
+
             }
             return forceLines;
         }
@@ -278,7 +297,7 @@ namespace TriangleDeloneWithMagnetic
         }
         private float Ub(PointF p1, PointF p2, PointF p3, PointF p4)
         {
-            float result = ((p2.X - p1.X) * (p1.Y - p3.Y) - (p2.Y - p1.Y) * (p1.X - p3.X)) /
+            float result = -((p2.X - p1.X) * (p1.Y - p3.Y) - (p2.Y - p1.Y) * (p1.X - p3.X)) /
                             ((p4.Y - p3.Y) * (p2.X - p1.X) - (p4.X - p3.X) * (p2.Y - p1.Y));
             return result;
         }
