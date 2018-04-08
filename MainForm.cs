@@ -180,17 +180,17 @@ namespace TriangleDeloneWithMagnetic
 
                 }
 
-                //if(levelLines.Count>0)
-                //{
-                //    foreach(LevelLines line in levelLines)
-                //    {
-                //        graph.DrawLine(trianglePen, (float)parametrs.X(width, line.point1.X), (float)parametrs.Y(height, line.point1.Y),
-                //                               (float)parametrs.X(width, line.point2.X), (float)parametrs.Y(height, line.point2.Y));
+                if (levelLines.Count > 0&&CheckIsoline.Checked)
+                {
+                    foreach (LevelLines line in levelLines)
+                    {
+                        graph.DrawLine(trianglePen, (float)parametrs.X(width, line.point1.X), (float)parametrs.Y(height, line.point1.Y),
+                                               (float)parametrs.X(width, line.point2.X), (float)parametrs.Y(height, line.point2.Y));
 
-                //    }
-                //}
+                    }
+                }
 
-                if (forceLines.Count > 0)
+                if (forceLines.Count > 0&&CheckForce.Checked)
                 {
                     foreach (LevelLines line in forceLines)
                     {
@@ -326,6 +326,15 @@ namespace TriangleDeloneWithMagnetic
             Painting();
         }
 
+        private void CheckIsoline_CheckedChanged(object sender, EventArgs e)
+        {
+            Painting();
+        }
+
+        private void CheckForce_CheckedChanged(object sender, EventArgs e)
+        {
+            Painting();
+        }
 
         private void DrawBtn_Click(object sender, EventArgs e)
         {

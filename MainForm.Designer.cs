@@ -53,8 +53,10 @@
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.radioTriangle = new System.Windows.Forms.RadioButton();
             this.radioPotential = new System.Windows.Forms.RadioButton();
+            this.radioTriangle = new System.Windows.Forms.RadioButton();
+            this.CheckIsoline = new System.Windows.Forms.CheckBox();
+            this.CheckForce = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.GraphicsBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ScrollHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ScrollWidth)).BeginInit();
@@ -277,14 +279,27 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.CheckForce);
+            this.groupBox3.Controls.Add(this.CheckIsoline);
             this.groupBox3.Controls.Add(this.radioPotential);
             this.groupBox3.Controls.Add(this.radioTriangle);
             this.groupBox3.Location = new System.Drawing.Point(952, 19);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(163, 104);
+            this.groupBox3.Size = new System.Drawing.Size(163, 157);
             this.groupBox3.TabIndex = 14;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Тип отображаемого содержимого";
+            // 
+            // radioPotential
+            // 
+            this.radioPotential.AutoSize = true;
+            this.radioPotential.Location = new System.Drawing.Point(16, 62);
+            this.radioPotential.Name = "radioPotential";
+            this.radioPotential.Size = new System.Drawing.Size(80, 17);
+            this.radioPotential.TabIndex = 1;
+            this.radioPotential.Text = "Потенциал";
+            this.radioPotential.UseVisualStyleBackColor = true;
+            this.radioPotential.CheckedChanged += new System.EventHandler(this.radioPotential_CheckedChanged);
             // 
             // radioTriangle
             // 
@@ -299,16 +314,27 @@
             this.radioTriangle.UseVisualStyleBackColor = true;
             this.radioTriangle.CheckedChanged += new System.EventHandler(this.radioTriangle_CheckedChanged);
             // 
-            // radioPotential
+            // CheckIsoline
             // 
-            this.radioPotential.AutoSize = true;
-            this.radioPotential.Location = new System.Drawing.Point(16, 62);
-            this.radioPotential.Name = "radioPotential";
-            this.radioPotential.Size = new System.Drawing.Size(80, 17);
-            this.radioPotential.TabIndex = 1;
-            this.radioPotential.Text = "Потенциал";
-            this.radioPotential.UseVisualStyleBackColor = true;
-            this.radioPotential.CheckedChanged += new System.EventHandler(this.radioPotential_CheckedChanged);
+            this.CheckIsoline.AutoSize = true;
+            this.CheckIsoline.Location = new System.Drawing.Point(33, 91);
+            this.CheckIsoline.Name = "CheckIsoline";
+            this.CheckIsoline.Size = new System.Drawing.Size(76, 17);
+            this.CheckIsoline.TabIndex = 2;
+            this.CheckIsoline.Text = "Изолинии";
+            this.CheckIsoline.UseVisualStyleBackColor = true;
+            this.CheckIsoline.CheckedChanged += new System.EventHandler(this.CheckIsoline_CheckedChanged);
+            // 
+            // CheckForce
+            // 
+            this.CheckForce.AutoSize = true;
+            this.CheckForce.Location = new System.Drawing.Point(32, 114);
+            this.CheckForce.Name = "CheckForce";
+            this.CheckForce.Size = new System.Drawing.Size(104, 17);
+            this.CheckForce.TabIndex = 3;
+            this.CheckForce.Text = "Силовые линии";
+            this.CheckForce.UseVisualStyleBackColor = true;
+            this.CheckForce.CheckedChanged += new System.EventHandler(this.CheckForce_CheckedChanged);
             // 
             // MainForm
             // 
@@ -369,6 +395,8 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.RadioButton radioPotential;
         private System.Windows.Forms.RadioButton radioTriangle;
+        private System.Windows.Forms.CheckBox CheckForce;
+        private System.Windows.Forms.CheckBox CheckIsoline;
     }
 }
 
