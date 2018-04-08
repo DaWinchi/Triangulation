@@ -56,7 +56,7 @@ namespace TriangleDeloneWithMagnetic
         {
             int size_triangles = triangles.Count;
             int size_magnet1 = magnet1.Count;
-
+            forceLines.Clear();
             for (int i = 0; i < size_magnet1; ++i)
             {
                 Potential pot = magnet1[i];
@@ -112,7 +112,7 @@ namespace TriangleDeloneWithMagnetic
                         ka = Ua(triangles[num_triangle].point1.point, triangles[num_triangle].point3.point, pot.point, pot2);
                         kb = Ub(triangles[num_triangle].point1.point, triangles[num_triangle].point3.point, pot.point, pot2);
 
-                        if (ka <= 1 && ka >= 0 && kb <= 1 && kb >= 0)
+                        if (ka <= 1 && ka >= 0)
                         {
                             pointIntersect.X = triangles[num_triangle].point1.point.X
                                             + ka * (triangles[num_triangle].point3.point.X
@@ -130,7 +130,7 @@ namespace TriangleDeloneWithMagnetic
                         ka = Ua(triangles[num_triangle].point1.point, triangles[num_triangle].point2.point, pot.point, pot2);
                         kb = Ub(triangles[num_triangle].point1.point, triangles[num_triangle].point2.point, pot.point, pot2);
 
-                        if (ka <= 1 && ka >= 0 && kb <= 1 && kb >= 0)
+                        if (ka <= 1 && ka >= 0)
                         {
                             pointIntersect.X = triangles[num_triangle].point1.point.X
                                             + ka * (triangles[num_triangle].point2.point.X
@@ -148,7 +148,7 @@ namespace TriangleDeloneWithMagnetic
 
                     forceLines.Add(line);
 
-                    for (int z = 0; z < 10; z++)
+                    for (int z = 0; z < 500; z++)
                     {
                         TrianglePotential triangle = new TrianglePotential();
                         PointF passPoint1 = new PointF();
@@ -221,7 +221,7 @@ namespace TriangleDeloneWithMagnetic
                         ka = Ua(mainPoint, passPoint2, pot.point, pot2);
                         kb = Ub(mainPoint, passPoint2, pot.point, pot2);
 
-                        if (ka <= 1 && ka >= 0 && kb <= 1 && kb >= 0)
+                        if (ka <= 1 && ka >= 0)
                         {
                             pointIntersect.X = mainPoint.X + ka * (passPoint2.X - mainPoint.X);
                             pointIntersect.Y = mainPoint.Y + ka * (passPoint2.Y - mainPoint.Y);
@@ -235,7 +235,7 @@ namespace TriangleDeloneWithMagnetic
                             ka = Ua(mainPoint, passPoint1, pot.point, pot2);
                             kb = Ub(mainPoint, passPoint1, pot.point, pot2);
 
-                            if (ka <= 1 && ka >= 0 && kb <= 1 && kb >= 0)
+                            if (ka <= 1 && ka >= 0)
                             {
                                 pointIntersect.X = mainPoint.X + ka * (passPoint1.X - mainPoint.X);
                                 pointIntersect.Y = mainPoint.Y + ka * (passPoint1.Y - mainPoint.Y);
@@ -266,7 +266,7 @@ namespace TriangleDeloneWithMagnetic
         {
             float scalar = (p2.X - p1.X) * (point_test.X - p1.X) + (p2.Y - p1.Y) * (point_test.Y - p1.Y);
             if (scalar > 1e-7) return false;
-            else return false;
+            else return true;
         }
 
         /*Угловой коэффициент прямой одной из прямых*/
