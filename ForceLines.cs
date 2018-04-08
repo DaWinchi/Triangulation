@@ -70,7 +70,9 @@ namespace TriangleDeloneWithMagnetic
                 float A = -DpDx(triangles[num_triangle].point1,
                     triangles[num_triangle].point2,
                     triangles[num_triangle].point3);
-
+                float B = -DpDy(triangles[num_triangle].point1,
+                    triangles[num_triangle].point2,
+                    triangles[num_triangle].point3);
 
 
             }
