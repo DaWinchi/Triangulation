@@ -15,10 +15,12 @@ namespace TriangleDeloneWithMagnetic
         List<Potential> magnet1;
         List<Potential> magnet2;
 
-        public ForceLines(List<Triangle> p_triangles, List<Potential> p_magnet1, List<Potential> p_magnet2)
+        public ForceLines(List<TrianglePotential> p_triangles, List<Potential> p_magnet1, List<Potential> p_magnet2)
         {
             triangles = new List<TrianglePotential>();
             forceLines = new List<LevelLines>();
+
+            triangles.AddRange(p_triangles);
 
             magnet1 = new List<Potential>();
             magnet1.AddRange(p_magnet1);
@@ -59,150 +61,31 @@ namespace TriangleDeloneWithMagnetic
             {
                 Potential pot = magnet1[i];
                 int num_triangle = 0;
-
-                /*Поиск любого треугольника на границе магнита содержащего точку pot*/
-                for (int j = 0; j < size_triangles; j++)
+                if (pot.value > 0)
                 {
-                    if (pot.point == triangles[j].point1.point ||
-                        pot.point == triangles[j].point2.point ||
-                        pot.point == triangles[j].point3.point)
-                        num_triangle = j;
-                }
-
-                float A = -DpDx(triangles[num_triangle].point1,
-                    triangles[num_triangle].point2,
-                    triangles[num_triangle].point3);
-                float B = -DpDy(triangles[num_triangle].point1,
-                    triangles[num_triangle].point2,
-                    triangles[num_triangle].point3);
-                //крайняя точка градиента
-                PointF pot2 = new PointF { X = pot.point.X + A, Y = pot.point.Y + B };
-
-                PointF pointIntersect = new PointF(); //точка пересечения
-                LevelLines line = new LevelLines();
-
-                PointF futureBoardPoint1 = new PointF(); //точки стороны, с которой будет пересечение градиента
-                PointF futureBoardPoint2 = new PointF();
-
-                if (pot.point == triangles[num_triangle].point1.point)
-                {
-                    float ka = 0, kb = 0;
-                    ka = Ua(triangles[num_triangle].point2.point, triangles[num_triangle].point3.point, pot.point, pot2);
-                    kb = Ub(triangles[num_triangle].point2.point, triangles[num_triangle].point3.point, pot.point, pot2);
-
-                    if (ka <= 1 && ka >= 0 && kb <= 1 && kb >= 0)
-                    {
-                        pointIntersect.X = triangles[num_triangle].point2.point.X
-                                        + ka * (triangles[num_triangle].point3.point.X
-                                        - triangles[num_triangle].point2.point.X);
-                        pointIntersect.Y = triangles[num_triangle].point2.point.Y
-                                        + ka * (triangles[num_triangle].point3.point.Y
-                                        - triangles[num_triangle].point2.point.Y);
-                        futureBoardPoint1 = triangles[num_triangle].point2.point;
-                        futureBoardPoint2 = triangles[num_triangle].point3.point;
-
-                    }
-                }
-                else if (pot.point == triangles[num_triangle].point2.point)
-                {
-                    float ka = 0, kb = 0;
-                    ka = Ua(triangles[num_triangle].point1.point, triangles[num_triangle].point3.point, pot.point, pot2);
-                    kb = Ub(triangles[num_triangle].point1.point, triangles[num_triangle].point3.point, pot.point, pot2);
-
-                    if (ka <= 1 && ka >= 0 && kb <= 1 && kb >= 0)
-                    {
-                        pointIntersect.X = triangles[num_triangle].point1.point.X
-                                        + ka * (triangles[num_triangle].point3.point.X
-                                        - triangles[num_triangle].point1.point.X);
-                        pointIntersect.Y = triangles[num_triangle].point1.point.Y
-                                        + ka * (triangles[num_triangle].point3.point.Y
-                                        - triangles[num_triangle].point1.point.Y);
-                        futureBoardPoint1 = triangles[num_triangle].point1.point;
-                        futureBoardPoint2 = triangles[num_triangle].point3.point;
-                    }
-                }
-                else if (pot.point == triangles[num_triangle].point3.point)
-                {
-                    float ka = 0, kb = 0;
-                    ka = Ua(triangles[num_triangle].point1.point, triangles[num_triangle].point2.point, pot.point, pot2);
-                    kb = Ub(triangles[num_triangle].point1.point, triangles[num_triangle].point2.point, pot.point, pot2);
-
-                    if (ka <= 1 && ka >= 0 && kb <= 1 && kb >= 0)
-                    {
-                        pointIntersect.X = triangles[num_triangle].point1.point.X
-                                        + ka * (triangles[num_triangle].point2.point.X
-                                        - triangles[num_triangle].point1.point.X);
-                        pointIntersect.Y = triangles[num_triangle].point1.point.Y
-                                        + ka * (triangles[num_triangle].point2.point.Y
-                                        - triangles[num_triangle].point1.point.Y);
-                        futureBoardPoint1 = triangles[num_triangle].point2.point;
-                        futureBoardPoint2 = triangles[num_triangle].point1.point;
-                    }
-                }
-
-                line.point1 = pot.point;
-                line.point2 = pointIntersect;
-
-                forceLines.Add(line);
-
-                for (int z = 0; z < 10; z++)
-                {
-                    TrianglePotential triangle = new TrianglePotential();
-                    int numPoint1 = 0, numPoint2 = 0; //номера совпавших точек в треугольнике
-                    /*Поиск любого треугольника содержащего точки futureBoardPoints*/
+                    /*Поиск любого треугольника на границе магнита содержащего точку pot*/
                     for (int j = 0; j < size_triangles; j++)
                     {
-                        TrianglePotential tr = new TrianglePotential();
-                        tr = triangles[j];
-                        if (futureBoardPoint1 == tr.point1.point && futureBoardPoint2 == tr.point2.point)
-                        {
+                        if (pot.point == triangles[j].point1.point ||
+                            pot.point == triangles[j].point2.point ||
+                            pot.point == triangles[j].point3.point)
                             num_triangle = j;
-                            numPoint1 = 1;
-                            numPoint2 = 2;
-                        }
-                        if (futureBoardPoint1 == tr.point1.point && futureBoardPoint2 == tr.point3.point)
-                        {
-                            num_triangle = j;
-                            numPoint1 = 1;
-                            numPoint2 = 3;
-                        }
-                        if (futureBoardPoint1 == tr.point2.point && futureBoardPoint2 == tr.point1.point)
-                        {
-                            num_triangle = j;
-                            numPoint1 = 2;
-                            numPoint2 = 1;
-                        }
-                        if (futureBoardPoint1 == tr.point2.point && futureBoardPoint2 == tr.point3.point)
-                        {
-                            num_triangle = j;
-                            numPoint1 = 2;
-                            numPoint2 = 3;
-                        }
-                        if (futureBoardPoint1 == tr.point3.point && futureBoardPoint2 == tr.point2.point)
-                        {
-                            num_triangle = j;
-                            numPoint1 = 3;
-                            numPoint2 = 2;
-                        }
-                        if (futureBoardPoint1 == tr.point3.point && futureBoardPoint2 == tr.point1.point)
-                        {
-
-                            num_triangle = j;
-                            numPoint1 = 3;
-                            numPoint2 = 1;
-
-                        }
                     }
-                    triangle = triangles[num_triangle];
 
-                    A = -DpDx(triangle.point1, triangle.point2, triangle.point3);
-                    B = -DpDy(triangle.point1, triangle.point2, triangle.point3);
+                    float A = -DpDx(triangles[num_triangle].point1,
+                        triangles[num_triangle].point2,
+                        triangles[num_triangle].point3);
+                    float B = -DpDy(triangles[num_triangle].point1,
+                        triangles[num_triangle].point2,
+                        triangles[num_triangle].point3);
+                    //крайняя точка градиента
+                    PointF pot2 = new PointF { X = pot.point.X + A, Y = pot.point.Y + B };
 
-                    pot.point = pointIntersect;
-                    pot2.X = pot.point.X + A;
-                    pot2.Y = pot.point.Y + B;
+                    PointF pointIntersect = new PointF(); //точка пересечения
+                    LevelLines line = new LevelLines();
 
-                    /*Запомню точки из треугольника, совпавшие со стороной, чтобы её пропустить*/
+                    PointF futureBoardPoint1 = new PointF(); //точки стороны, с которой будет пересечение градиента
+                    PointF futureBoardPoint2 = new PointF();
 
                     if (pot.point == triangles[num_triangle].point1.point)
                     {
@@ -265,11 +148,117 @@ namespace TriangleDeloneWithMagnetic
 
                     forceLines.Add(line);
 
+                    for (int z = 0; z < 10; z++)
+                    {
+                        TrianglePotential triangle = new TrianglePotential();
+                        PointF passPoint1 = new PointF();
+                        PointF passPoint2 = new PointF();
+                        PointF mainPoint = new PointF();
+                        /*Поиск любого треугольника содержащего точки futureBoardPoints*/
+                        for (int j = 0; j < size_triangles; j++)
+                        {
+                            TrianglePotential tr = new TrianglePotential();
+                            tr = triangles[j];
+                            if (futureBoardPoint1 == tr.point1.point && futureBoardPoint2 == tr.point2.point)
+                            {
+                                num_triangle = j;
+                                passPoint1 = tr.point1.point;
+                                passPoint2 = tr.point2.point;
+                                mainPoint = tr.point3.point;
+                            }
+                            if (futureBoardPoint1 == tr.point1.point && futureBoardPoint2 == tr.point3.point)
+                            {
+                                num_triangle = j;
+                                passPoint1 = tr.point1.point;
+                                passPoint2 = tr.point3.point;
+                                mainPoint = tr.point2.point;
+                            }
+                            if (futureBoardPoint1 == tr.point2.point && futureBoardPoint2 == tr.point1.point)
+                            {
+                                num_triangle = j;
+                                passPoint1 = tr.point2.point;
+                                passPoint2 = tr.point1.point;
+                                mainPoint = tr.point3.point;
+                            }
+                            if (futureBoardPoint1 == tr.point2.point && futureBoardPoint2 == tr.point3.point)
+                            {
+                                num_triangle = j;
+                                passPoint1 = tr.point1.point;
+                                passPoint2 = tr.point3.point;
+                                mainPoint = tr.point2.point;
+                            }
+                            if (futureBoardPoint1 == tr.point3.point && futureBoardPoint2 == tr.point2.point)
+                            {
+                                num_triangle = j;
+                                passPoint1 = tr.point3.point;
+                                passPoint2 = tr.point2.point;
+                                mainPoint = tr.point1.point;
+                            }
+                            if (futureBoardPoint1 == tr.point3.point && futureBoardPoint2 == tr.point1.point)
+                            {
+
+                                num_triangle = j;
+                                passPoint1 = tr.point1.point;
+                                passPoint2 = tr.point3.point;
+                                mainPoint = tr.point2.point;
+
+                            }
+                        }
+
+                        triangle = triangles[num_triangle];
+
+                        A = -DpDx(triangle.point1, triangle.point2, triangle.point3);
+                        B = -DpDy(triangle.point1, triangle.point2, triangle.point3);
+
+                        pot.point = pointIntersect;
+                        pot2.X = pot.point.X + A;
+                        pot2.Y = pot.point.Y + B;
+
+
+
+                        //Пробую найти пересечение с однйо из сторон треугольника
+                        float ka = 0, kb = 0;
+                        ka = Ua(mainPoint, passPoint2, pot.point, pot2);
+                        kb = Ub(mainPoint, passPoint2, pot.point, pot2);
+
+                        if (ka <= 1 && ka >= 0 && kb <= 1 && kb >= 0)
+                        {
+                            pointIntersect.X = mainPoint.X + ka * (passPoint2.X - mainPoint.X);
+                            pointIntersect.Y = mainPoint.Y + ka * (passPoint2.Y - mainPoint.Y);
+                            futureBoardPoint1 = mainPoint;
+                            futureBoardPoint2 = passPoint2;
+
+                        }
+
+                        if (!IsPointOnLine(mainPoint, passPoint2, pointIntersect))
+                        {
+                            ka = Ua(mainPoint, passPoint1, pot.point, pot2);
+                            kb = Ub(mainPoint, passPoint1, pot.point, pot2);
+
+                            if (ka <= 1 && ka >= 0 && kb <= 1 && kb >= 0)
+                            {
+                                pointIntersect.X = mainPoint.X + ka * (passPoint1.X - mainPoint.X);
+                                pointIntersect.Y = mainPoint.Y + ka * (passPoint1.Y - mainPoint.Y);
+                                futureBoardPoint1 = mainPoint;
+                                futureBoardPoint2 = passPoint1;
+
+                            }
+                        }
+
+
+
+
+                        line.point1 = pot.point;
+                        line.point2 = pointIntersect;
+
+                        forceLines.Add(line);
+
+                    }
+
+
+
                 }
-
-
             }
-
             return forceLines;
         }
 
