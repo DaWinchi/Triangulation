@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -58,6 +59,7 @@ namespace TriangleDeloneWithMagnetic
             {
                 Potential pot = magnet1[i];
                 int num_triangle = 0;
+
                 /*Поиск любого треугольника на границе магнита содержащего точку pot*/
                 for (int j = 0; j < size_triangles; j++)
                 {
@@ -74,10 +76,39 @@ namespace TriangleDeloneWithMagnetic
                     triangles[num_triangle].point2,
                     triangles[num_triangle].point3);
 
+                PointF pointIntersect = new PointF();
+
+                /*Проверияю есть ли пересечение*/
+                if(pot.point==triangles[num_triangle].point1.point)
+                {
+
+                }
+
 
             }
 
             return forceLines;
+        }
+
+        private bool IsPointOnLine(PointF p1, PointF p2, PointF point_test)
+        {
+            float scalar = (p2.X - p1.X) * (point_test.X - p1.X) + (p2.Y - p1.Y) * (point_test.Y - p1.Y);
+            if (scalar > 1e-7) return false;
+            else return false;
+        }
+
+        /*Угловой коэффициент прямой одной из прямых*/
+        private float Ua(PointF p1, PointF p2, PointF p3, PointF p4)
+        {
+            float result = ((p4.X - p3.X) * (p1.Y - p3.Y) - (p4.Y - p3.Y) * (p1.X - p3.X)) /
+                            ((p4.Y-p3.Y)*(p2.X-p1.X)-(p4.X-p3.X)*(p2.Y-p1.Y));
+            return result;
+        }
+        private float Ub(PointF p1, PointF p2, PointF p3, PointF p4)
+        {
+            float result = ((p2.X - p1.X) * (p1.Y - p3.Y) - (p2.Y - p1.Y) * (p1.X - p3.X)) /
+                            ((p4.Y - p3.Y) * (p2.X - p1.X) - (p4.X - p3.X) * (p2.Y - p1.Y));
+            return result;
         }
     }
 }
