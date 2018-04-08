@@ -35,8 +35,8 @@ namespace TriangleDeloneWithMagnetic
             levelLines = new List<LevelLines>();
             forceLines = new List<LevelLines>();
 
-            magnet1 = new Magnet(50, 20, center1, (float)(2 * Math.PI / 360 * 45), 3);
-            magnet2 = new Magnet(50, 20, center2, (float)(2 * Math.PI / 360 * 30), 3);
+            magnet1 = new Magnet(70, 10, center1, (float)(2 * Math.PI / 360 * 45), 3);
+            magnet2 = new Magnet(70, 10, center2, (float)(2 * Math.PI / 360 * 30), 3);
             GlobalRect = new Magnet(160, 160, centerGlobal, (float)(2 * Math.PI / 360 * 0), 5);
 
 
@@ -56,8 +56,13 @@ namespace TriangleDeloneWithMagnetic
             ScrollAngle.Maximum = 360;
             ScrollAngle.Value = 45;
 
-            StepXBox.Text = "12";
-            StepYBox.Text = "12";
+            StepXBox.Text = "7";
+            StepYBox.Text = "7";
+
+            plusUBox1.Text = "10";
+            plusUBox2.Text = "10";
+            minusUBox1.Text = "-10";
+            minusUBox2.Text = "-10";
 
             Width1Box.Text = magnet1.width.ToString();
             Width2Box.Text = magnet2.width.ToString();
@@ -88,7 +93,7 @@ namespace TriangleDeloneWithMagnetic
         Magnet magnet2; PointF center2 = new PointF(0, 50);
         Magnet GlobalRect; PointF centerGlobal = new PointF(0, 0);
 
-        float step_x = 12F, step_y = 12F, x_now, y_now;
+        float step_x = 7F, step_y = 7F, x_now, y_now;
 
         List<Triangle> list_triangles = new List<Triangle>();
         private void Painting()
@@ -97,7 +102,7 @@ namespace TriangleDeloneWithMagnetic
 
             bmp = new Bitmap(width, height);
             graph = Graphics.FromImage(bmp);
-          //  graph.SmoothingMode = SmoothingMode.AntiAlias;
+           graph.SmoothingMode = SmoothingMode.AntiAlias;
 
             SolidBrush brushBkgrd = new SolidBrush(Color.Black);
             SolidBrush brushPoint = new SolidBrush(Color.Red);
@@ -223,8 +228,8 @@ namespace TriangleDeloneWithMagnetic
 
 
 
-            magnet1Potential = magnet1.ReturnPotential(-10, 10);
-            magnet2Potential = magnet2.ReturnPotential(-10, 10);
+            magnet1Potential = magnet1.ReturnPotential((float)double.Parse(minusUBox1.Text), (float)double.Parse(plusUBox1.Text));
+            magnet2Potential = magnet2.ReturnPotential((float)double.Parse(minusUBox2.Text), (float)double.Parse(plusUBox2.Text));
             RectPotential = GlobalRect.ReturnPotential(0, 0);
             Painting();
 
@@ -246,8 +251,8 @@ namespace TriangleDeloneWithMagnetic
             magnet2Potential.Clear();
             RectPotential.Clear();
 
-            magnet1Potential = magnet1.ReturnPotential(-10, 10);
-            magnet2Potential = magnet2.ReturnPotential(-10, 10);
+            magnet1Potential = magnet1.ReturnPotential((float)double.Parse(minusUBox1.Text), (float)double.Parse(plusUBox1.Text));
+            magnet2Potential = magnet2.ReturnPotential((float)double.Parse(minusUBox2.Text), (float)double.Parse(plusUBox2.Text));
             RectPotential = GlobalRect.ReturnPotential(0, 0);
             Painting();
         }
@@ -268,8 +273,8 @@ namespace TriangleDeloneWithMagnetic
             magnet2Potential.Clear();
             RectPotential.Clear();
 
-            magnet1Potential = magnet1.ReturnPotential(-10, 10);
-            magnet2Potential = magnet2.ReturnPotential(-10, 10);
+            magnet1Potential = magnet1.ReturnPotential((float)double.Parse(minusUBox1.Text), (float)double.Parse(plusUBox1.Text));
+            magnet2Potential = magnet2.ReturnPotential((float)double.Parse(minusUBox2.Text), (float)double.Parse(plusUBox2.Text));
             RectPotential = GlobalRect.ReturnPotential(0, 0);
             Painting();
         }
@@ -319,8 +324,8 @@ namespace TriangleDeloneWithMagnetic
             magnet2Potential.Clear();
             RectPotential.Clear();
 
-            magnet1Potential = magnet1.ReturnPotential(-10, 10);
-            magnet2Potential = magnet2.ReturnPotential(-10, 10);
+            magnet1Potential = magnet1.ReturnPotential((float)double.Parse(minusUBox1.Text), (float)double.Parse(plusUBox1.Text));
+            magnet2Potential = magnet2.ReturnPotential((float)double.Parse(minusUBox2.Text), (float)double.Parse(plusUBox2.Text));
             RectPotential = GlobalRect.ReturnPotential(0, 0);
 
             Painting();
