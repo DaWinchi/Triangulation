@@ -37,6 +37,12 @@
             this.RadioMagnet1 = new System.Windows.Forms.RadioButton();
             this.RadioMagnet2 = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.minusUBox2 = new System.Windows.Forms.TextBox();
+            this.plusUBox2 = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.minusUBox1 = new System.Windows.Forms.TextBox();
+            this.plusUBox1 = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -53,16 +59,10 @@
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.CheckForce = new System.Windows.Forms.CheckBox();
+            this.CheckIsoline = new System.Windows.Forms.CheckBox();
             this.radioPotential = new System.Windows.Forms.RadioButton();
             this.radioTriangle = new System.Windows.Forms.RadioButton();
-            this.CheckIsoline = new System.Windows.Forms.CheckBox();
-            this.CheckForce = new System.Windows.Forms.CheckBox();
-            this.plusUBox1 = new System.Windows.Forms.TextBox();
-            this.minusUBox1 = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.minusUBox2 = new System.Windows.Forms.TextBox();
-            this.plusUBox2 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.GraphicsBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ScrollHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ScrollWidth)).BeginInit();
@@ -82,11 +82,12 @@
             // 
             // DrawBtn
             // 
-            this.DrawBtn.Location = new System.Drawing.Point(809, 558);
+            this.DrawBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.DrawBtn.Location = new System.Drawing.Point(710, 457);
             this.DrawBtn.Name = "DrawBtn";
-            this.DrawBtn.Size = new System.Drawing.Size(136, 63);
+            this.DrawBtn.Size = new System.Drawing.Size(205, 195);
             this.DrawBtn.TabIndex = 1;
-            this.DrawBtn.Text = "Начать";
+            this.DrawBtn.Text = "Моделирование";
             this.DrawBtn.UseVisualStyleBackColor = true;
             this.DrawBtn.Click += new System.EventHandler(this.DrawBtn_Click);
             // 
@@ -160,6 +161,52 @@
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Выберите магнит";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(12, 170);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(109, 13);
+            this.label8.TabIndex = 26;
+            this.label8.Text = "Потенциал(max, min)";
+            // 
+            // minusUBox2
+            // 
+            this.minusUBox2.Location = new System.Drawing.Point(126, 170);
+            this.minusUBox2.Name = "minusUBox2";
+            this.minusUBox2.Size = new System.Drawing.Size(32, 20);
+            this.minusUBox2.TabIndex = 25;
+            // 
+            // plusUBox2
+            // 
+            this.plusUBox2.Location = new System.Drawing.Point(160, 170);
+            this.plusUBox2.Name = "plusUBox2";
+            this.plusUBox2.Size = new System.Drawing.Size(33, 20);
+            this.plusUBox2.TabIndex = 24;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(12, 76);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(109, 13);
+            this.label7.TabIndex = 23;
+            this.label7.Text = "Потенциал(max, min)";
+            // 
+            // minusUBox1
+            // 
+            this.minusUBox1.Location = new System.Drawing.Point(126, 76);
+            this.minusUBox1.Name = "minusUBox1";
+            this.minusUBox1.Size = new System.Drawing.Size(33, 20);
+            this.minusUBox1.TabIndex = 22;
+            // 
+            // plusUBox1
+            // 
+            this.plusUBox1.Location = new System.Drawing.Point(161, 76);
+            this.plusUBox1.Name = "plusUBox1";
+            this.plusUBox1.Size = new System.Drawing.Size(32, 20);
+            this.plusUBox1.TabIndex = 21;
             // 
             // label5
             // 
@@ -250,11 +297,11 @@
             // 
             // UpdateBtn
             // 
-            this.UpdateBtn.Location = new System.Drawing.Point(835, 293);
+            this.UpdateBtn.Location = new System.Drawing.Point(710, 414);
             this.UpdateBtn.Name = "UpdateBtn";
-            this.UpdateBtn.Size = new System.Drawing.Size(86, 37);
+            this.UpdateBtn.Size = new System.Drawing.Size(205, 37);
             this.UpdateBtn.TabIndex = 10;
-            this.UpdateBtn.Text = "Update";
+            this.UpdateBtn.Text = "Обновить данные";
             this.UpdateBtn.UseVisualStyleBackColor = true;
             this.UpdateBtn.Click += new System.EventHandler(this.UpdateBtn_Click);
             // 
@@ -282,7 +329,7 @@
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.StepYBox);
             this.groupBox2.Controls.Add(this.StepXBox);
-            this.groupBox2.Location = new System.Drawing.Point(716, 242);
+            this.groupBox2.Location = new System.Drawing.Point(710, 214);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(205, 45);
             this.groupBox2.TabIndex = 13;
@@ -295,12 +342,36 @@
             this.groupBox3.Controls.Add(this.CheckIsoline);
             this.groupBox3.Controls.Add(this.radioPotential);
             this.groupBox3.Controls.Add(this.radioTriangle);
-            this.groupBox3.Location = new System.Drawing.Point(952, 19);
+            this.groupBox3.Location = new System.Drawing.Point(710, 265);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(163, 157);
+            this.groupBox3.Size = new System.Drawing.Size(205, 143);
             this.groupBox3.TabIndex = 14;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Тип отображаемого содержимого";
+            // 
+            // CheckForce
+            // 
+            this.CheckForce.AutoSize = true;
+            this.CheckForce.Location = new System.Drawing.Point(32, 114);
+            this.CheckForce.Name = "CheckForce";
+            this.CheckForce.Size = new System.Drawing.Size(104, 17);
+            this.CheckForce.TabIndex = 3;
+            this.CheckForce.Text = "Силовые линии";
+            this.CheckForce.UseVisualStyleBackColor = true;
+            this.CheckForce.CheckedChanged += new System.EventHandler(this.CheckForce_CheckedChanged);
+            // 
+            // CheckIsoline
+            // 
+            this.CheckIsoline.AutoSize = true;
+            this.CheckIsoline.Checked = true;
+            this.CheckIsoline.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CheckIsoline.Location = new System.Drawing.Point(32, 91);
+            this.CheckIsoline.Name = "CheckIsoline";
+            this.CheckIsoline.Size = new System.Drawing.Size(76, 17);
+            this.CheckIsoline.TabIndex = 2;
+            this.CheckIsoline.Text = "Изолинии";
+            this.CheckIsoline.UseVisualStyleBackColor = true;
+            this.CheckIsoline.CheckedChanged += new System.EventHandler(this.CheckIsoline_CheckedChanged);
             // 
             // radioPotential
             // 
@@ -326,79 +397,11 @@
             this.radioTriangle.UseVisualStyleBackColor = true;
             this.radioTriangle.CheckedChanged += new System.EventHandler(this.radioTriangle_CheckedChanged);
             // 
-            // CheckIsoline
-            // 
-            this.CheckIsoline.AutoSize = true;
-            this.CheckIsoline.Location = new System.Drawing.Point(33, 91);
-            this.CheckIsoline.Name = "CheckIsoline";
-            this.CheckIsoline.Size = new System.Drawing.Size(76, 17);
-            this.CheckIsoline.TabIndex = 2;
-            this.CheckIsoline.Text = "Изолинии";
-            this.CheckIsoline.UseVisualStyleBackColor = true;
-            this.CheckIsoline.CheckedChanged += new System.EventHandler(this.CheckIsoline_CheckedChanged);
-            // 
-            // CheckForce
-            // 
-            this.CheckForce.AutoSize = true;
-            this.CheckForce.Location = new System.Drawing.Point(32, 114);
-            this.CheckForce.Name = "CheckForce";
-            this.CheckForce.Size = new System.Drawing.Size(104, 17);
-            this.CheckForce.TabIndex = 3;
-            this.CheckForce.Text = "Силовые линии";
-            this.CheckForce.UseVisualStyleBackColor = true;
-            this.CheckForce.CheckedChanged += new System.EventHandler(this.CheckForce_CheckedChanged);
-            // 
-            // plusUBox1
-            // 
-            this.plusUBox1.Location = new System.Drawing.Point(113, 76);
-            this.plusUBox1.Name = "plusUBox1";
-            this.plusUBox1.Size = new System.Drawing.Size(36, 20);
-            this.plusUBox1.TabIndex = 21;
-            // 
-            // minusUBox1
-            // 
-            this.minusUBox1.Location = new System.Drawing.Point(157, 76);
-            this.minusUBox1.Name = "minusUBox1";
-            this.minusUBox1.Size = new System.Drawing.Size(36, 20);
-            this.minusUBox1.TabIndex = 22;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(12, 76);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(62, 13);
-            this.label7.TabIndex = 23;
-            this.label7.Text = "Потенциал";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(14, 165);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(62, 13);
-            this.label8.TabIndex = 26;
-            this.label8.Text = "Потенциал";
-            // 
-            // minusUBox2
-            // 
-            this.minusUBox2.Location = new System.Drawing.Point(157, 165);
-            this.minusUBox2.Name = "minusUBox2";
-            this.minusUBox2.Size = new System.Drawing.Size(36, 20);
-            this.minusUBox2.TabIndex = 25;
-            // 
-            // plusUBox2
-            // 
-            this.plusUBox2.Location = new System.Drawing.Point(113, 165);
-            this.plusUBox2.Name = "plusUBox2";
-            this.plusUBox2.Size = new System.Drawing.Size(36, 20);
-            this.plusUBox2.TabIndex = 24;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1127, 664);
+            this.ClientSize = new System.Drawing.Size(923, 664);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.UpdateBtn);

@@ -343,6 +343,7 @@ namespace TriangleDeloneWithMagnetic
 
         private void DrawBtn_Click(object sender, EventArgs e)
         {
+            UpdateBtn_Click(sender, e);
             triangulation = new Triangulation();
             list_triangles.Clear();
 
@@ -399,6 +400,8 @@ namespace TriangleDeloneWithMagnetic
                     ForceLines force = new ForceLines(trianglesWithPotential, magnet1Potential, magnet2Potential);
                     forceLines.Clear();
                     forceLines.AddRange(force.GetForceLines());
+                    radioPotential.Checked = true;
+                    Painting();
 
                 }
                 x_now = GlobalRect.A.X+step_x;
